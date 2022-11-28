@@ -2,6 +2,7 @@
 
 #include "blank.h"
 #include <string>
+using namespace std;
 
 void Blank::makeMove(Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){
     return false; // impossible for blank space to make a move, so returning false

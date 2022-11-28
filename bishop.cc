@@ -1,6 +1,7 @@
 #include "bishop.h"
 #include "piece.h"
 #include <string>
+using namespace std;
 
 Bishop::Bishop(Board* board, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, board{board}, name{name}, colour{colour}, x{x}, y{y} {}
 

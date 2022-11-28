@@ -6,7 +6,7 @@
 #include "computer.h"
 #include <iostream>
 #include <string>
-
+using namespace std;
 
 void BoardController::resetGame(){
     //TODO: INSERT CODE

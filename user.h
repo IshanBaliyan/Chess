@@ -7,9 +7,9 @@
 
 class User {
     public:
-        virtual getName() const = 0;
-        virtual getType() const = 0;
-        virtual getMove() const = 0;
+        virtual string getName() const = 0;
+        virtual string getType() const = 0;
+        virtual string getMove() const = 0;
 }
 
 

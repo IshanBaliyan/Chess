@@ -1,6 +1,7 @@
 // boardview.cc
 #include "boardview.h"
 #include <string>
+using namespace std;
 
 BoardView::BoardView(BoardModel *subject) :  subject{subject} {
     subject->attach(this);
