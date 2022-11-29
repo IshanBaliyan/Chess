@@ -10,14 +10,13 @@
 class Human : public User {
     string name;
     string type;
-    Piece*[8][8] board;
+    Piece* board[8][8];
     
     public:
-        Human(string name, string type, Piece*[][] board) : name{name}, type{type}, board{board} {}
+        Human(string name, string type, Piece*board);
         string getName() const override;
         string getType() const override;
         string getMove() const override; // Returns move from cin
 };
 
 #endif
-

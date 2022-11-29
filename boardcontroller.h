@@ -13,8 +13,6 @@ class BoardController {
         void setupGame();
         void runGame();
         void outputWins();
-}
+};
 
-
-
-
+#endif
