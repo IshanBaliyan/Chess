@@ -1,26 +1,27 @@
 #include "boardcontroller.h"
-#include "boardview.h"
-#include "boardmodel.h"
-#include "user.h"
-#include "human.h"
-#include "computer.h"
+
 #include <iostream>
 #include <string>
+
+#include "boardmodel.h"
+#include "boardview.h"
+#include "computer.h"
+#include "human.h"
+#include "user.h"
 using namespace std;
 
-void BoardController::resetGame(){
-    //TODO: INSERT CODE
+void BoardController::resetGame() {
+    // TODO: INSERT CODE
 }
 
-void BoardController::setupGame(){
-i   //TODO: INSERT CODE
+void BoardController::setupGame() {
+    // TODO: INSERT CODE
 }
 
-void BoardController::runGame(){
-    //TODO: INSERT CODE
+void BoardController::runGame() {
+    // TODO: INSERT CODE
 }
 
-void BoardController::outputWins(){
-    //TODO: INSERT CODE
+void BoardController::outputWins() {
+    // TODO: INSERT CODE
 }
-

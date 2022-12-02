@@ -10,6 +10,6 @@ class User {
         virtual string getName() const = 0;
         virtual string getType() const = 0;
         virtual string getMove() const = 0;
-}
+};
 
-
+#endif
