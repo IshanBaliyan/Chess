@@ -11,7 +11,7 @@ using namespace std;
 class Piece;
 
 class BoardModel : public Subject {
-  Piece*** myBoard; // Really means Piece[][], two-dimensional array
+  Piece*** myBoard; // Really means Piece*[][], two-dimensional array
   string turn;
 
   // Variables to undo last move
@@ -39,6 +39,8 @@ class BoardModel : public Subject {
   void changeTurn(string colour);
   string getTurn() const;
   void nextTurn(); // Forward to next black/white player's turn
+  void makeMove(int currentX, int currentY, int newX, int newY); // Throws error if the move is not possible
+  void makeMoveWithPawnPromotion(string replacePiece,int currentX, int currentY, int newX, int newY);
 };
 
 #endif
