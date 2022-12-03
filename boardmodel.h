@@ -4,6 +4,7 @@
 #ifndef BOARDMODEL_H
 #define BOARDMODEL_H
 #include <string>
+#include <set>
 #include "subject.h"
 
 using namespace std;
@@ -13,6 +14,12 @@ class Piece;
 class BoardModel : public Subject {
   Piece*** myBoard; // Really means Piece*[][], two-dimensional array
   string turn;
+  set<Piece*> blackPieces;
+  set<Piece*> whitePieces;
+
+  // Need for finding check, checkmate, stalemate
+  Piece *whiteKing;
+  Piece *blackKing;
 
   // Variables to undo last move
   Piece* lastCapturedPiece;
@@ -33,7 +40,8 @@ class BoardModel : public Subject {
   bool isCheckmate();
   bool isStalemate();
   void addPiece(Piece* piece, int x, int y);
-  void removePiece(Piece* piece, int x, int y);
+  void deletePiece(Piece* piece, int x, int y); // removes piece from board and deletes it
+  void removePieceFromBoard(Piece* piece, int x, int y); // removes piece from board, but it still exists
   void undo();
   void undo(string specialMove);
   void changeTurn(string colour);
