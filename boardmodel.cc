@@ -55,11 +55,27 @@ void BoardModel::removePiece(Piece* piece, int x, int y){
 }
 
 void BoardModel::undo(){
-    // TODO: [INSERT CODE]
+    undo("no special move");
 }
 
 void BoardModel::undo(string specialMove){
-    // TODO: [INSERT CODE]
+    if(specialMove == "no special move"){
+        // Old position of lastActionPiece will be empty, so straightforward
+        int capturedX = lastActionPiece->getX();
+        int capturedY = lastActionPiece->getY();
+
+        myBoard[lastActionX][lastActionY] = lastActionPiece;
+        myBoard[capturedX][capturedY] = lastCapturedPiece;
+    }
+    else if(specialMove == "castle"){
+        // TODO: Add implementation to undo. NOT MVP
+    }
+    else if(specialMove == "pawn promotion"){
+        // TODO: Add implementation to undo. NOT MVP
+    }
+    else if(specialMove == "en passant"){
+        // TODO: Add implementation to undo. NOT MVP
+    }
 }
 
 void BoardModel::changeTurn(string colour){
