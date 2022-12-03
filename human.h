@@ -6,6 +6,7 @@
 #include "piece.h"
 #include <string>
 
+using namespace std;
 
 class Human : public User {
     string name;
