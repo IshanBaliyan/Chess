@@ -1,8 +1,9 @@
 #include "boardmodel.h"
 #include "piece.h"
+#include "invalidmoveexception.h"
 
-explicit BoardModel::BoardModel(Piece* boardIn[8][8]){
-    // Must copy board over manually, since cannot use MIL with two-dimensional array
+BoardModel::BoardModel(Piece* boardIn[8][8]){
+    // Must copy board over manually, since we cannot use MIL with two-dimensional array
     // in current C++ version
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
@@ -31,7 +32,8 @@ bool BoardModel::isCheck(){
 
 
 bool BoardModel::isCheckmate(){
-    // TODO: [INSERT CODE]
+    // TODO: Call isCheck() constantly, while trying to run canMove() for every possible permutation of
+    // pieces on the board
 }
 
 
@@ -74,5 +76,24 @@ void BoardModel::nextTurn() {
       turn = "white";
     } else{
       turn = "black";
+    }
+}
+
+void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
+    try{
+        myBoard[currentX][currentY]->makeMove(lastCapturedPiece, lastActionPiece, lastActionX, lastActionY,
+        newX, newY);
+    } catch (InvalidMoveException& t){
+        throw;
+    }
+
+}
+
+void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int currentY, int newX, int newY){
+    try{
+        myBoard[currentX][currentY]->makeMove(replacePiece, lastCapturedPiece, lastActionPiece, lastActionX, 
+        lastActionY, newX, newY);
+    } catch (InvalidMoveException& t){
+        throw;
     }
 }
