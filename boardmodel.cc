@@ -67,9 +67,8 @@ bool BoardModel::isCheck(){
 
 // Private method
 bool BoardModel::willMovingAnywhereCauseACheck(){
-     // If black needs to see if it is checkmated
     if(turn == "black"){
-        // Loop through all black pieces and see if there is any move that will stop the white's check
+        // Loop through all black pieces and see if there is any move that will not cause white to check
         for(Piece* blackPiece : blackPieces){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
@@ -80,9 +79,8 @@ bool BoardModel::willMovingAnywhereCauseACheck(){
             }
         }
     }
-    // If white needs to see if it is checkmated
     else{
-        // Loop through all white pieces and see if there is anymove that will stop the black's check
+        // Loop through all white pieces and see if there is any move that will not cause black to check
         for(Piece* whitePiece : whitePieces){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
@@ -117,7 +115,7 @@ bool BoardModel::isStalemate(){
 void BoardModel::addPiece(Piece* piece, int x, int y){
     // If myBoard[x][y] is not a nullptr, delete the piece currently there
     if(myBoard[x][y]){
-        deletePiece(myBoard[x][y], x, y);
+        deletePiece(myBoard[x][y]);
     }
 
     // Add the new piece to the set of white or black pieces
@@ -131,28 +129,42 @@ void BoardModel::addPiece(Piece* piece, int x, int y){
     myBoard[x][y] = piece;
 }
 
-void BoardModel::removePieceFromBoard(Piece* piece, int x, int y){
+void BoardModel::removePieceFromBoard(Piece* piece){
     // Remove the piece from the set of black or white pieces
-    if(myBoard[x][y]->getColour() == "black"){
-        blackPieces.erase(myBoard[x][y]);
+    if(piece->getColour() == "black"){
+        // Remove the piece from the black set
+        for (auto i = blackPieces.begin(); i != blackPieces.end(); ) {
+            if (*i == piece){
+                blackPieces.erase(i);
+            }
+            else{
+                i++;
+            }
+        }
     } 
     else{
-        whitePieces.erase(myBoard[x][y]);
+        // Remove the piece from the white set
+        for (auto i = whitePieces.begin(); i != whitePieces.end(); ) {
+            if (*i == piece){
+                whitePieces.erase(i);
+            }
+            else{
+                i++;
+            }
+        }
     }
+
+    // Set the x,y space on the board to be empty (nullptr means no piece on that square)
+    myBoard[piece->getX()][piece->getY()] = nullptr;
+
     // Note, the piece still exists, so make sure to delete it later
 }
 
-void BoardModel::deletePiece(Piece* piece, int x, int y){
-    // Remove the piece from the set of black or white pieces
-    if(myBoard[x][y]->getColour() == "black"){
-        blackPieces.erase(myBoard[x][y]);
-    } 
-    else{
-        whitePieces.erase(myBoard[x][y]);
-    }
+void BoardModel::deletePiece(Piece* piece){
+    removePieceFromBoard(piece);
 
     // Deletes the piece for you
-    delete myBoard[x][y];
+    delete piece;
 }
 
 void BoardModel::undo(){
