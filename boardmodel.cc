@@ -129,6 +129,32 @@ void BoardModel::addPiece(Piece* piece, int x, int y){
     myBoard[x][y] = piece;
 }
 
+bool BoardModel::isPieceOnBoard(Piece* piece){
+    if(piece->getColour() == "black"){
+        // Remove the piece from the black set
+        for (auto i = blackPieces.begin(); i != blackPieces.end(); ) {
+            if (*i == piece){
+                return true;
+            }
+            else{
+                i++;
+            }
+        }
+    } 
+    else{
+        // Remove the piece from the white set
+        for (auto i = whitePieces.begin(); i != whitePieces.end(); ) {
+            if (*i == piece){
+                return true;
+            }
+            else{
+                i++;
+            }
+        }
+    }
+    return false;
+}
+
 void BoardModel::removePieceFromBoard(Piece* piece){
     // Remove the piece from the set of black or white pieces
     if(piece->getColour() == "black"){

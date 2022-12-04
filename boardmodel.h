@@ -43,6 +43,7 @@ class BoardModel : public Subject {
   bool isStalemate();
   void addPiece(Piece* piece, int x, int y);
   void deletePiece(Piece* piece); // removes piece from board and deletes it
+  bool isPieceOnBoard(Piece* piece);
   void removePieceFromBoard(Piece* piece); // removes piece from board, but it still exists
   void undo();
   void undo(string specialMove);
