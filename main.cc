@@ -17,6 +17,8 @@ int main() {
     while (getline(cin, currLine)) {
         BoardController* boardController = new BoardController();
 
+        boardController->initializeScores();
+
         if (cin.eof()) {
             boardController->outputWins();
             break;

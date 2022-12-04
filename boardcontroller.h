@@ -11,12 +11,11 @@ class BoardController {
     BoardModel* model;
 
    private:
-    string currTurn;
     string whitePlayer;
     string blackPlayer;
     bool changedStartColour;
-    int whiteScore;
-    int blackScore;
+    float whiteScore;
+    float blackScore;
     Piece* pieces[8][8]; 
 
     int parseX(string coords);  // converts column letter of position (ie "e" in e1) into numerical equivalent
@@ -26,6 +25,9 @@ class BoardController {
     string convertName(string inputName); // converts inputted piece name to standard used in program
     void createDefaultBoard();
     Piece *createPawn(string colour, int x, int y);
+    bool checkForPawnPromotion(BoardModel *model); // checks whole board if a pawn currently is in promotion square
+    bool willPawnPromoteOnMove(Piece *piece); // checks if piece is a pawn that will be promoted on move
+    void updateScore();
 
    public:
     BoardController();
@@ -33,6 +35,7 @@ class BoardController {
     void setBlackPlayer(string player);
     string getWhitePlayer();
     string getBlackPlayer();
+    void initializeScores(); // sets score of black and white to 0
     
     void resetGame();
     void setupGame();
