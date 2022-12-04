@@ -8,9 +8,9 @@
 #include "boardmodel.h"
 #include "boardview.h"
 #include "chesspiece.h"
-#include "piece.h"
 #include "computer.h"
 #include "human.h"
+#include "piece.h"
 #include "user.h"
 using namespace std;
 
@@ -77,6 +77,62 @@ string BoardController::getColour(string inputName) {
     }
 }
 
+bool BoardController::checkForPawnPromotion(BoardModel *model) {
+    int xPosition = 0;
+    int yPosition = 0;
+    Piece *piece;
+
+    while (xPosition < 8) {  // check for any black pawns on first row (x, 0)
+        piece = model->getState(xPosition, yPosition);
+
+        if (piece->getName() == "P") {
+            if (piece->getColour() == "black") {
+                return true;
+            }
+        }
+        xPosition++;
+    }
+
+    yPosition = 7;
+    xPosition = 0;
+    while (xPosition < 8) {
+        piece = model->getState(xPosition, yPosition);
+        if (piece->getName() == "P") {
+            if (piece->getColour() == "white") {
+                cout << "Cannot have whtie pawn at " << xPosition << ", " << yPosition << endl;
+                return true;
+            }
+        }
+        xPosition++;
+    }
+    return false;
+}
+
+bool BoardController::willPawnPromoteOnMove(Piece *piece) {
+    if (piece->getName() == "P") {
+        if (piece->getY() == 6) {
+            if (piece->getColour() == "white") {
+                return true;
+            }
+        }
+
+        if (piece->getY() == 1) {
+            if (piece->getColour() == "black") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void BoardController::updateScore() {
+    if (model->getTurn() == "white") {
+        blackScore++;
+    } else {
+        whiteScore++;
+    }
+}
+
 // PUBLIC FUNCTIONS
 
 void BoardController::setWhitePlayer(string player) {
@@ -101,103 +157,103 @@ Piece *BoardController::createPawn(string colour, int x, int y) {
     return pawn;
 }
 
+void BoardController::initializeScores() {
+    whiteScore = 0;
+    blackScore = 0;
+}
+
 void BoardController::createDefaultBoard() {
+    model = new BoardModel(pieces);
+    // piece = new King{model->board(), pieceName, colour, x, y, new ChessPiece};
 
-model = new BoardModel(pieces);
-// piece = new King{model->board(), pieceName, colour, x, y, new ChessPiece};
+    // create all of the white pieces
+    Piece *pawnW1 = createPawn("white", 0, 1);
+    Piece *pawnW2 = createPawn("white", 1, 1);
+    Piece *pawnW3 = createPawn("white", 2, 1);
+    Piece *pawnW4 = createPawn("white", 3, 1);
+    Piece *pawnW5 = createPawn("white", 4, 1);
+    Piece *pawnW6 = createPawn("white", 5, 1);
+    Piece *pawnW7 = createPawn("white", 6, 1);
+    Piece *pawnW8 = createPawn("white", 7, 1);
 
-// create all of the white pieces
-Piece *pawnW1 = createPawn("white", 0,1);
-Piece *pawnW2 = createPawn("white", 1,1);
-Piece *pawnW3 = createPawn("white", 2,1);
-Piece *pawnW4 = createPawn("white", 3,1);
-Piece *pawnW5 = createPawn("white", 4,1);
-Piece *pawnW6 = createPawn("white", 5,1);
-Piece *pawnW7 = createPawn("white", 6,1);
-Piece *pawnW8 = createPawn("white", 7,1);
+    Piece *rookW1 = new Rook{model->board(), "R", "white", 0, 0, new ChessPiece};
+    Piece *rookW2 = new Rook{model->board(), "R", "white", 7, 0, new ChessPiece};
 
-Piece *rookW1 = new Rook{model->board(), "R", "white", 0, 0, new ChessPiece};
-Piece *rookW2= new Rook{model->board(), "R", "white", 7, 0, new ChessPiece};
+    Piece *knightW1 = new Knight{model->board(), "N", "white", 1, 0, new ChessPiece};
+    Piece *knightW2 = new Knight{model->board(), "N", "white", 6, 0, new ChessPiece};
 
-Piece *knightW1 = new Knight{model->board(), "N", "white", 1, 0, new ChessPiece};
-Piece *knightW2 = new Knight{model->board(), "N", "white", 6, 0, new ChessPiece};
+    Piece *bishopW1 = new Bishop{model->board(), "B", "white", 2, 0, new ChessPiece};
+    Piece *bishopW2 = new Bishop{model->board(), "B", "white", 5, 0, new ChessPiece};
 
-Piece *bishopW1 = new Bishop{model->board(), "B", "white", 2, 0, new ChessPiece};
-Piece *bishopW2 = new Bishop{model->board(), "B", "white", 5, 0, new ChessPiece};
+    Piece *queenW = new Queen{model->board(), "Q", "white", 3, 0, new ChessPiece};
+    Piece *kingW = new King{model->board(), "K", "white", 4, 0, new ChessPiece};
 
-Piece *queenW = new Queen{model->board(), "Q", "white", 3, 0, new ChessPiece};
-Piece *kingW = new King{model->board(), "K", "white", 4, 0, new ChessPiece};
+    // create all black pieces
+    Piece *pawnB1 = createPawn("black", 0, 6);
+    Piece *pawnB2 = createPawn("black", 1, 6);
+    Piece *pawnB3 = createPawn("black", 2, 6);
+    Piece *pawnB4 = createPawn("black", 3, 6);
+    Piece *pawnB5 = createPawn("black", 4, 6);
+    Piece *pawnB6 = createPawn("black", 5, 6);
+    Piece *pawnB7 = createPawn("black", 6, 6);
+    Piece *pawnB8 = createPawn("black", 7, 6);
 
-// create all black pieces
-Piece *pawnB1 = createPawn("black", 0,6);
-Piece *pawnB2 = createPawn("black", 1,6);
-Piece *pawnB3 = createPawn("black", 2,6);
-Piece *pawnB4 = createPawn("black", 3,6);
-Piece *pawnB5 = createPawn("black", 4,6);
-Piece *pawnB6 = createPawn("black", 5,6);
-Piece *pawnB7 = createPawn("black", 6,6);
-Piece *pawnB8 = createPawn("black", 7,6);
+    Piece *rookB1 = new Rook{model->board(), "R", "black", 0, 7, new ChessPiece};
+    Piece *rookB2 = new Rook{model->board(), "R", "black", 7, 7, new ChessPiece};
 
-Piece *rookB1 = new Rook{model->board(), "R", "black", 0, 7, new ChessPiece};
-Piece *rookB2= new Rook{model->board(), "R", "black", 7, 7, new ChessPiece};
+    Piece *knightB1 = new Knight{model->board(), "N", "black", 1, 7, new ChessPiece};
+    Piece *knightB2 = new Knight{model->board(), "N", "black", 6, 7, new ChessPiece};
 
-Piece *knightB1 = new Knight{model->board(), "N", "black", 1, 7, new ChessPiece};
-Piece *knightB2 = new Knight{model->board(), "N", "black", 6, 7, new ChessPiece};
+    Piece *bishopB1 = new Bishop{model->board(), "B", "black", 2, 7, new ChessPiece};
+    Piece *bishopB2 = new Bishop{model->board(), "B", "black", 5, 7, new ChessPiece};
 
-Piece *bishopB1 = new Bishop{model->board(), "B", "black", 2, 7, new ChessPiece};
-Piece *bishopB2 = new Bishop{model->board(), "B", "black", 5, 7, new ChessPiece};
+    Piece *queenB = new Queen{model->board(), "Q", "black", 3, 7, new ChessPiece};
+    Piece *kingB = new King{model->board(), "K", "black", 4, 7, new ChessPiece};
 
-Piece *queenB = new Queen{model->board(), "Q", "black", 3, 7, new ChessPiece};
-Piece *kingB = new King{model->board(), "K", "black", 4, 7, new ChessPiece};
+    // add pieces to board
+    model->addPiece(pawnW1, 0, 1);
+    model->addPiece(pawnW2, 1, 1);
+    model->addPiece(pawnW3, 2, 1);
+    model->addPiece(pawnW4, 3, 1);
+    model->addPiece(pawnW5, 4, 1);
+    model->addPiece(pawnW6, 5, 1);
+    model->addPiece(pawnW7, 6, 1);
+    model->addPiece(pawnW8, 7, 1);
 
-// add pieces to board
-model->addPiece(pawnW1, 0, 1);
-model->addPiece(pawnW2, 1, 1);
-model->addPiece(pawnW3, 2, 1);
-model->addPiece(pawnW4, 3, 1);
-model->addPiece(pawnW5, 4, 1);
-model->addPiece(pawnW6, 5, 1);
-model->addPiece(pawnW7, 6, 1);
-model->addPiece(pawnW8, 7, 1);
+    model->addPiece(rookW1, 0, 0);
+    model->addPiece(knightW1, 1, 0);
+    model->addPiece(bishopW1, 2, 0);
+    model->addPiece(queenW, 3, 0);
+    model->addPiece(kingW, 4, 0);
+    model->addPiece(bishopW2, 5, 0);
+    model->addPiece(knightW2, 6, 0);
+    model->addPiece(rookW2, 7, 0);
 
-model->addPiece(rookW1, 0, 0);
-model->addPiece(knightW1, 1, 0);
-model->addPiece(bishopW1, 2, 0);
-model->addPiece(queenW, 3, 0);
-model->addPiece(kingW, 4, 0);
-model->addPiece(bishopW2, 5, 0);
-model->addPiece(knightW2, 6, 0);
-model->addPiece(rookW2, 7, 0);
+    model->addPiece(pawnB1, 0, 6);
+    model->addPiece(pawnB2, 1, 6);
+    model->addPiece(pawnB3, 2, 6);
+    model->addPiece(pawnB4, 3, 6);
+    model->addPiece(pawnB5, 4, 6);
+    model->addPiece(pawnB6, 5, 6);
+    model->addPiece(pawnB7, 6, 6);
+    model->addPiece(pawnB8, 7, 6);
 
-model->addPiece(pawnB1, 0, 6);
-model->addPiece(pawnB2, 1, 6);
-model->addPiece(pawnB3, 2, 6);
-model->addPiece(pawnB4, 3, 6);
-model->addPiece(pawnB5, 4, 6);
-model->addPiece(pawnB6, 5, 6);
-model->addPiece(pawnB7, 6, 6);
-model->addPiece(pawnB8, 7, 6);
-
-model->addPiece(rookB1, 0, 7);
-model->addPiece(knightB1, 1, 7);
-model->addPiece(bishopB1, 2, 7);
-model->addPiece(queenB, 3, 7);
-model->addPiece(kingB, 4, 7);
-model->addPiece(bishopB2, 5, 7);
-model->addPiece(knightB2, 6, 7);
-model->addPiece(rookB2, 7, 7);
-
-// model->addPiece();
-
-
-
-
+    model->addPiece(rookB1, 0, 7);
+    model->addPiece(knightB1, 1, 7);
+    model->addPiece(bishopB1, 2, 7);
+    model->addPiece(queenB, 3, 7);
+    model->addPiece(kingB, 4, 7);
+    model->addPiece(bishopB2, 5, 7);
+    model->addPiece(knightB2, 6, 7);
+    model->addPiece(rookB2, 7, 7);
 }
 
 void BoardController::resetGame() {
     // TODO: INSERT CODE
     // add new board
     changedStartColour = false;
+    model->~BoardModel();
+    createDefaultBoard();
 }
 
 void BoardController::setupGame() {
@@ -210,45 +266,34 @@ void BoardController::setupGame() {
     string pieceName;
     string colour;
 
+    // default current turn to white
+    model->changeTurn("white");
+
     // TODO: create boardmodel
     createDefaultBoard();
-    
 
     while (true) {
         currLine = getLine();
         if (currLine == "done") {
             bool canExit = true;
-            int xCounter = 0;
-            int yCounter = 0;
 
-            Piece *piece = model->getState(xCounter, yCounter);
-
-            while (xCounter < 8) {  // check for any black pawns on first row (x, 0)
-
-                if (piece->getName() == "P") {
-                    if (piece->getColour() == "black") {
-                        cout << "Cannot have black pawn at " << xCounter << ", " << yCounter << endl;
-                        canExit = false;
-                    }
-                }
-                xCounter++;
-            }
-
-            yCounter = 7;
-            xCounter = 0;
-            while (xCounter < 8) {
-                if (piece->getName() == "P") {
-                    if (piece->getColour() == "white") {
-                        cout << "Cannot have whtie pawn at " << xCounter << ", " << yCounter << endl;
-                        canExit = false;
-                    }
-                }
-            }
-
-            // Check if king is in check
-            if (model->isCheck()) {
-                cout << "king is in check" << endl;
+            // check if any pawns can be promoted
+            if (checkForPawnPromotion(model)) {
+                cout << "cannot have pawns in promotion squares" << endl;  // remove later
                 canExit = false;
+            }
+
+            // TODO: Check if there is at least one king on board
+
+            // Check if either king is in check
+            if (model->isCheck()) {
+                canExit = false;
+            } else {
+                model->nextTurn();
+                if (model->isCheck()) {
+                    canExit = false;
+                }
+                model->nextTurn();  // change back to current turn
             }
 
             // If conditions are met to finish setup, break out of setup, if not stay in setup mode
@@ -276,19 +321,19 @@ void BoardController::setupGame() {
                 Piece *piece;
 
                 if (pieceName == "K") {
-                    piece = new King{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new King{model, pieceName, colour, x, y, new ChessPiece};
                 } else if (pieceName == "Q") {
-                    piece = new Bishop{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new Bishop{model, pieceName, colour, x, y, new ChessPiece};
                 } else if (pieceName == "B") {
-                    piece = new Bishop{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new Bishop{model, pieceName, colour, x, y, new ChessPiece};
                 } else if (pieceName == "R") {
-                    piece = new Bishop{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new Bishop{model, pieceName, colour, x, y, new ChessPiece};
 
                 } else if (pieceName == "N") {
-                    piece = new Bishop{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new Bishop{model, pieceName, colour, x, y, new ChessPiece};
 
                 } else if (pieceName == "P") {
-                    piece = new Bishop{model->board(), pieceName, colour, x, y, new ChessPiece};
+                    piece = new Bishop{model, pieceName, colour, x, y, new ChessPiece};
                 }
 
                 model->addPiece(piece, x, y);
@@ -299,15 +344,15 @@ void BoardController::setupGame() {
                 x = parseX(coord);
                 y = parseY(coord);
 
-                model->removePiece(model->board()->getPiece(x, y)), x, y);
+                model->deletePiece(model->getState(x, y));
 
             } else if (command == "=") {
                 ss1 >> colour;
 
                 if (colour == "black") {
-                    currTurn = "black";
+                    model->changeTurn("black");
                 } else {
-                    currTurn = "white";
+                    model->changeTurn("white");
                 }
 
                 changedStartColour = true;
@@ -317,7 +362,6 @@ void BoardController::setupGame() {
 }
 
 void BoardController::runGame() {
-    // TODO: INSERT CODE
 
     bool isRunning = true;
     string currLine;
@@ -329,6 +373,7 @@ void BoardController::runGame() {
     int x2;
     int y2;
     string piece;
+    string replacePiece;
 
     while (isRunning) {
         currLine = getLine();
@@ -338,27 +383,52 @@ void BoardController::runGame() {
 
         if (command == "move") {
             ss1 >> currCoord;
-
             ss1 >> nextCoord;
 
-            // TODO: check pawn promotion
-
-            // if normal move:
             x1 = parseX(currCoord);
             y1 = parseY(currCoord);
 
             x2 = parseX(nextCoord);
             y2 = parseY(nextCoord);
 
-            // TODO: check castling
+            Piece *piece = model->getState(x1, y1);
 
-        } else if (command == "resign") {
-            if (currTurn == "white") {
-                blackScore++;
+            // Promote pawn if its pawn promotion
+            if (willPawnPromoteOnMove(piece)) {
+                ss1 >> replacePiece;
+                model->makeMoveWithPawnPromotion(replacePiece, x1, y1, x2, y2);
+                model->changeTurn(model->getTurn());  // change to next turn
             } else {
-                whiteScore++;
+                // Make normal move or castle
+                model->makeMove(x1, y1, x2, y2);
+                model->changeTurn(model->getTurn());  // change to next turn
             }
 
+            if (model->isCheck()) {  // if move made mover in check
+                cout << model->getTurn() << " " << "is in check." << endl;
+            }
+            model->nextTurn();
+            if (model->isCheck()) {  // if move made opponent in check
+                cout << model->getTurn() << " " << "is in check." << endl;
+            }
+            model->nextTurn(); // change back to original turn
+
+            if (model->isCheckmate()) {
+                cout << "Checkmate! " << model->getTurn() << " wins!" << endl;
+                updateScore();
+                isRunning = false;
+            }
+
+            if (model->isStalemate()) {
+                cout << "Stalemate!" << endl;
+                whiteScore += 0.5;
+                blackScore += 0.5;
+                isRunning = false;
+            }
+
+        } else if (command == "resign") {
+            updateScore();
+            cout << model->getTurn() << " resigns" << endl;
             isRunning = false;
         }
     }
