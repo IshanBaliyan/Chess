@@ -17,12 +17,15 @@ class BoardController {
     bool changedStartColour;
     int whiteScore;
     int blackScore;
+    Piece* pieces[8][8]; 
 
     int parseX(string coords);  // converts column letter of position (ie "e" in e1) into numerical equivalent
     int parseY(string coors);
     string getLine();
     string getColour(string inputName); // gets the colour of the piece from the inputted piece name
     string convertName(string inputName); // converts inputted piece name to standard used in program
+    void createDefaultBoard();
+    Piece *createPawn(string colour, int x, int y);
 
    public:
     BoardController();
