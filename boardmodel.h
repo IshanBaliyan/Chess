@@ -26,7 +26,9 @@ class BoardModel : public Subject {
   Piece* lastActionPiece;
   int lastActionX;
   int lastActionY;
-  
+
+  bool willMovingAnywhereCauseACheck();
+
  public:
   explicit BoardModel(Piece* boardIn[8][8]);
 

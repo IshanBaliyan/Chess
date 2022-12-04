@@ -8,6 +8,8 @@ BoardModel::BoardModel(Piece* boardIn[8][8]){
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             myBoard[i][j] = boardIn[i][j];
+
+            // Add each piece to the set of black pieces or set of white pieces for future use
             if(myBoard[i][j]->getColour() == "black"){
                 blackPieces.insert(myBoard[i][j]);
             } else{
@@ -63,11 +65,11 @@ bool BoardModel::isCheck(){
     return false;
 }
 
-
-bool BoardModel::isCheckmate(){
-    // If black needs to see if it is checkmated
+// Private method
+bool BoardModel::willMovingAnywhereCauseACheck(){
+     // If black needs to see if it is checkmated
     if(turn == "black"){
-        // Loop through all black pieces and see if there is anymove that will stop the white's check
+        // Loop through all black pieces and see if there is any move that will stop the white's check
         for(Piece* blackPiece : blackPieces){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
@@ -94,9 +96,21 @@ bool BoardModel::isCheckmate(){
     return true;
 }
 
+bool BoardModel::isCheckmate(){
+    if(!isCheck()){
+        // if you are not in check, a checkmate is impossible
+        return false;
+    }
+    return willMovingAnywhereCauseACheck();
+}
+
 
 bool BoardModel::isStalemate(){
-    // TODO: [INSERT CODE]
+    if(isCheck()){
+        // if you are in check, a stalemate is impossible
+        return false;
+    }
+    return willMovingAnywhereCauseACheck();
 }
 
 
