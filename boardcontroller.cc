@@ -185,6 +185,13 @@ string BoardController::getBlackPlayer() {
     return blackPlayer;
 }
 
+int BoardController::getComputerLevel(string player) {
+    char level = player[9];
+    int levelNum = level - '0';
+    return levelNum;
+
+}
+
 Piece *BoardController::createPawn(string colour, int x, int y) {
     model = new BoardModel(pieces);
     Piece *pawn = new Pawn{model, "P", colour, x, y, new ChessPiece};
@@ -409,7 +416,7 @@ void BoardController::runGame() {
     int y2;
     string piece;
     string replacePiece;
-
+    
     while (isRunning) {
         currLine = getLine();
 
