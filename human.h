@@ -15,9 +15,8 @@ class Human : public User {
     
     public:
         Human(string name, string type, Piece*board);
-        string getName() const override;
         string getType() const override;
-        string getMove() const override; // Returns move from cin
+        string getMove() override; // Returns move from cin
 };
 
 #endif
