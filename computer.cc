@@ -8,7 +8,7 @@
 using namespace std;
 
 // Constructor
-Computer::Computer(string type, string colour, int level, Piece* boardIn[8][8]) : type{type}, colour{colour}, level{level} {
+Computer::Computer(string type, string colour, Piece* boardIn[8][8]) : type{type}, colour{colour} {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             board[i][j] = boardIn[i][j];
@@ -259,6 +259,11 @@ string Computer::getRandomMove()  {
     return convertMove(x, y);
 }
 
+int Computer::getLevel() {
+    level = name[9];
+    return level;
+}
+
 // Public methods:
 
 // Computer returns strategic move
@@ -280,6 +285,4 @@ string Computer::getColour() const {
     return colour;
 }
 
-int Computer::getLevel() const {
-    return level;
-}
+
