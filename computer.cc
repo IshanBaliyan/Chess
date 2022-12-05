@@ -8,7 +8,7 @@
 using namespace std;
 
 // Constructor
-Computer::Computer(string name, string type, string colour, int level, Piece* boardIn[8][8]) : name{name}, type{type}, colour{colour}, level{level} {
+Computer::Computer(string type, string colour, int level, Piece* boardIn[8][8]) : type{type}, colour{colour}, level{level} {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             board[i][j] = boardIn[i][j];
