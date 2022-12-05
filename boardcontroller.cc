@@ -133,6 +133,33 @@ void BoardController::updateScore() {
     }
 }
 
+bool BoardController::containsTwoKings() {
+    int i = 0;
+    int j = 0;
+    Piece *piece;
+    int numKingW = 0;
+    int numKingB = 0;
+
+    for (i; i <= 7; i++) {  // loop over row
+        for (j; j <= 7; j++) {
+            piece = model->getState(i, j);
+            if (piece->getName() == "K") {
+                if (piece->getColour() == "white") {
+                    numKingW++;
+                } else if (piece->getColour() == "black") {
+                    numKingB++;
+                }
+            }
+        }
+    }
+
+    if (numKingW == 1 && numKingB == 1) {
+        return true;
+    }
+
+    return false;
+}
+
 // PUBLIC FUNCTIONS
 
 void BoardController::setWhitePlayer(string player) {
@@ -269,7 +296,6 @@ void BoardController::setupGame() {
     // default current turn to white
     model->changeTurn("white");
 
-    // TODO: create boardmodel
     createDefaultBoard();
 
     while (true) {
@@ -277,13 +303,17 @@ void BoardController::setupGame() {
         if (currLine == "done") {
             bool canExit = true;
 
-            // check if any pawns can be promoted
+            // check if any pawns are on promotion squares
             if (checkForPawnPromotion(model)) {
                 cout << "cannot have pawns in promotion squares" << endl;  // remove later
                 canExit = false;
             }
 
-            // TODO: Check if there is at least one king on board
+            // Check if there is at least one king on board
+            if (!containsTwoKings()) {
+                cout << "must have at exactly 1 white king and 1 black king" << endl;
+                canExit = false;
+            }
 
             // Check if either king is in check
             if (model->isCheck()) {
@@ -362,7 +392,6 @@ void BoardController::setupGame() {
 }
 
 void BoardController::runGame() {
-
     bool isRunning = true;
     string currLine;
     string command;
@@ -405,13 +434,15 @@ void BoardController::runGame() {
             }
 
             if (model->isCheck()) {  // if move made mover in check
-                cout << model->getTurn() << " " << "is in check." << endl;
+                cout << model->getTurn() << " "
+                     << "is in check." << endl;
             }
             model->nextTurn();
             if (model->isCheck()) {  // if move made opponent in check
-                cout << model->getTurn() << " " << "is in check." << endl;
+                cout << model->getTurn() << " "
+                     << "is in check." << endl;
             }
-            model->nextTurn(); // change back to original turn
+            model->nextTurn();  // change back to original turn
 
             if (model->isCheckmate()) {
                 cout << "Checkmate! " << model->getTurn() << " wins!" << endl;
