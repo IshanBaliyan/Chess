@@ -24,14 +24,14 @@ class Computer : public User {
     void findPossibleMoves(Piece *piece); // add all possible moves for piece to moveLists
     string convertMove(int x, int y) ;  // converts x y coordinates to a move (eg. 0 ,0 => "a1")
     string getRandomMove();
+    int getLevel();
     
 
    public:
-    Computer(string type, string colour, int level, Piece* boardIn[8][8]);
+    Computer(string type, string colour, Piece* boardIn[8][8]);
     string getType() const override;
     string getMove() override;  // Computer returns strategic move
-    string getColour() const;
-    int getLevel() const;
+    string getColour() const override;
 };
 
 #endif
