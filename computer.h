@@ -27,7 +27,7 @@ class Computer : public User {
     
 
    public:
-    Computer(string name, string type, string colour, int level, Piece* boardIn[8][8]);
+    Computer(string type, string colour, int level, Piece* boardIn[8][8]);
     string getType() const override;
     string getMove() override;  // Computer returns strategic move
     string getColour() const;
