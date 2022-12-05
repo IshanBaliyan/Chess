@@ -5,13 +5,20 @@
 #include <sstream>
 #include <string>
 
+#include "bishop.h"
 #include "boardmodel.h"
 #include "boardview.h"
 #include "chesspiece.h"
 #include "computer.h"
 #include "human.h"
+#include "king.h"
+#include "knight.h"
+#include "pawn.h"
 #include "piece.h"
+#include "queen.h"
+#include "rook.h"
 #include "user.h"
+
 using namespace std;
 
 int BoardController::parseX(string coords) {
@@ -180,7 +187,7 @@ string BoardController::getBlackPlayer() {
 
 Piece *BoardController::createPawn(string colour, int x, int y) {
     model = new BoardModel(pieces);
-    Piece *pawn = new Pawn{model->board(), "P", colour, x, y, new ChessPiece};
+    Piece *pawn = new Pawn{model, "P", colour, x, y, new ChessPiece};
     return pawn;
 }
 
@@ -191,7 +198,6 @@ void BoardController::initializeScores() {
 
 void BoardController::createDefaultBoard() {
     model = new BoardModel(pieces);
-    // piece = new King{model->board(), pieceName, colour, x, y, new ChessPiece};
 
     // create all of the white pieces
     Piece *pawnW1 = createPawn("white", 0, 1);
@@ -203,17 +209,17 @@ void BoardController::createDefaultBoard() {
     Piece *pawnW7 = createPawn("white", 6, 1);
     Piece *pawnW8 = createPawn("white", 7, 1);
 
-    Piece *rookW1 = new Rook{model->board(), "R", "white", 0, 0, new ChessPiece};
-    Piece *rookW2 = new Rook{model->board(), "R", "white", 7, 0, new ChessPiece};
+    Piece *rookW1 = new Rook{model, "R", "white", 0, 0, new ChessPiece};
+    Piece *rookW2 = new Rook{model, "R", "white", 7, 0, new ChessPiece};
 
-    Piece *knightW1 = new Knight{model->board(), "N", "white", 1, 0, new ChessPiece};
-    Piece *knightW2 = new Knight{model->board(), "N", "white", 6, 0, new ChessPiece};
+    Piece *knightW1 = new Knight{model, "N", "white", 1, 0, new ChessPiece};
+    Piece *knightW2 = new Knight{model, "N", "white", 6, 0, new ChessPiece};
 
-    Piece *bishopW1 = new Bishop{model->board(), "B", "white", 2, 0, new ChessPiece};
-    Piece *bishopW2 = new Bishop{model->board(), "B", "white", 5, 0, new ChessPiece};
+    Piece *bishopW1 = new Bishop{model, "B", "white", 2, 0, new ChessPiece};
+    Piece *bishopW2 = new Bishop{model, "B", "white", 5, 0, new ChessPiece};
 
-    Piece *queenW = new Queen{model->board(), "Q", "white", 3, 0, new ChessPiece};
-    Piece *kingW = new King{model->board(), "K", "white", 4, 0, new ChessPiece};
+    Piece *queenW = new Queen{model, "Q", "white", 3, 0, new ChessPiece};
+    Piece *kingW = new King{model, "K", "white", 4, 0, new ChessPiece};
 
     // create all black pieces
     Piece *pawnB1 = createPawn("black", 0, 6);
@@ -225,17 +231,17 @@ void BoardController::createDefaultBoard() {
     Piece *pawnB7 = createPawn("black", 6, 6);
     Piece *pawnB8 = createPawn("black", 7, 6);
 
-    Piece *rookB1 = new Rook{model->board(), "R", "black", 0, 7, new ChessPiece};
-    Piece *rookB2 = new Rook{model->board(), "R", "black", 7, 7, new ChessPiece};
+    Piece *rookB1 = new Rook{model, "R", "black", 0, 7, new ChessPiece};
+    Piece *rookB2 = new Rook{model, "R", "black", 7, 7, new ChessPiece};
 
-    Piece *knightB1 = new Knight{model->board(), "N", "black", 1, 7, new ChessPiece};
-    Piece *knightB2 = new Knight{model->board(), "N", "black", 6, 7, new ChessPiece};
+    Piece *knightB1 = new Knight{model, "N", "black", 1, 7, new ChessPiece};
+    Piece *knightB2 = new Knight{model, "N", "black", 6, 7, new ChessPiece};
 
-    Piece *bishopB1 = new Bishop{model->board(), "B", "black", 2, 7, new ChessPiece};
-    Piece *bishopB2 = new Bishop{model->board(), "B", "black", 5, 7, new ChessPiece};
+    Piece *bishopB1 = new Bishop{model, "B", "black", 2, 7, new ChessPiece};
+    Piece *bishopB2 = new Bishop{model, "B", "black", 5, 7, new ChessPiece};
 
-    Piece *queenB = new Queen{model->board(), "Q", "black", 3, 7, new ChessPiece};
-    Piece *kingB = new King{model->board(), "K", "black", 4, 7, new ChessPiece};
+    Piece *queenB = new Queen{model, "Q", "black", 3, 7, new ChessPiece};
+    Piece *kingB = new King{model, "K", "black", 4, 7, new ChessPiece};
 
     // add pieces to board
     model->addPiece(pawnW1, 0, 1);
