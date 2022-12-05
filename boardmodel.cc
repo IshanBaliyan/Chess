@@ -161,6 +161,9 @@ bool BoardModel::isPieceOnBoard(Piece* piece){
 }
 
 void BoardModel::removePieceFromBoard(Piece* piece){
+    if(piece == nullptr){
+        return;
+    }
     // Remove the piece from the set of black or white pieces
     if(piece->getColour() == "black"){
         // Remove the piece from the black set
@@ -192,6 +195,10 @@ void BoardModel::removePieceFromBoard(Piece* piece){
 }
 
 void BoardModel::deletePiece(Piece* piece){
+    if(piece == nullptr){
+        return;
+    }
+
     removePieceFromBoard(piece);
 
     // Deletes the piece for you
