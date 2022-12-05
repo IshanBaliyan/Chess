@@ -29,6 +29,7 @@ class BoardController {
     bool willPawnPromoteOnMove(Piece *piece);       // checks if piece is a pawn that will be promoted on move
     void updateScore();
     bool containsTwoKings();  // checks if board contains exactly two kings (one black and one white)
+    int getComputerLevel(string player);
 
    public:
     BoardController();
