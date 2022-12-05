@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-Human::Human(string name, string type, string colour, Piece* board) : name{name}, type{type}, colour{colour}, board{board} {}
+Human::Human(string type, string colour, Piece* board) :type{type}, colour{colour}, board{board} {}
 
 // Get human's next move from cin as input
 string Human::getMove() {

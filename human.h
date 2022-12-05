@@ -15,7 +15,7 @@ class Human : public User {
     Piece* board[8][8];
     
     public:
-        Human(string name, string type, string colour, Piece*board);
+        Human(string type, string colour, Piece*board);
         string getType() const override;
         string getMove() override; // Returns move from cin
         string getColour() const override;
