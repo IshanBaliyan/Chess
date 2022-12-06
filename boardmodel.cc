@@ -279,3 +279,16 @@ bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
 
     return canMove;
 }
+
+Piece* getEnPassantablePiece () const {
+    if (enPassantablePiece != nullptr && lastActionPiece != nullptr) {
+        if (*enPassantablePiece == *lastActionPiece) {
+            return enPassantablePiece;
+        }
+    }
+    return nullptr;
+}
+
+void setEnPassantablePiece (Piece* piece) {
+    enPassantablePiece = piece;
+}

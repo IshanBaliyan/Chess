@@ -36,8 +36,10 @@ bool Pawn::canMove(const int newX, const int newY) {
             return false;
         }
     } else if (x - newX == 1 || newX - x == 1) { // if diag move, must be a capture
-        if (model->getState(newX,newY) == nullptr && 
-                *(model->getState(newX,y)) != *(model->enPassantablePiece)) {
+        if (model->getState(newX,newY) == nullptr && // if moving to diag emmpty space,
+                ((model->getEnPassantablePiece() == nullptr) || // must be en passant
+                (model->getState(newX,y) == nullptr) || 
+                *(model->getState(newX,y)) != *(model->getEnPassantablePiece())) {
             return false;
         }
     } else {
@@ -80,6 +82,9 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
         throw InvalidMoveException{};
     } else {
         model->deletePiece(tmpLastCapturedPiece);
+        if (lastActionX + 2 == x || lastActionX == x + 2) {
+            setEnPassantablePiece(this);
+        }
     }
 }
 

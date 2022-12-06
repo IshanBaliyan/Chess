@@ -25,6 +25,9 @@ class BoardModel : public Subject {
   int lastActionX;
   int lastActionY;
 
+  // Variable to handle en passant
+  Piece* enPassantablePiece;
+
   bool willMovingAnywhereCauseACheck();
 
  public:
@@ -51,6 +54,8 @@ class BoardModel : public Subject {
   void makeMove(int currentX, int currentY, int newX, int newY); // Throws error if the move is not possible
   void makeMoveWithPawnPromotion(std::string replacePiece,int currentX, int currentY, int newX, int newY);
   bool checkMove(int currX, int currY, int nextX, int nextY);  // checks if piece is able to move to x, y position
+  Piece* getEnPassantablePiece() const;
+  void setEnPassantablePiece(Piece* piece);
 };
 
 #endif
