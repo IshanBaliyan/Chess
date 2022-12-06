@@ -282,7 +282,7 @@ bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
 
 Piece* BoardModel::getEnPassantablePiece () const {
     if (enPassantablePiece != nullptr && lastActionPiece != nullptr) {
-        if (*enPassantablePiece == *lastActionPiece) {
+        if (pieceEqualsOtherPiece(enPassantablePiece, lastActionPiece)) {
             return enPassantablePiece;
         }
     }
@@ -291,4 +291,22 @@ Piece* BoardModel::getEnPassantablePiece () const {
 
 void BoardModel::setEnPassantablePiece (Piece* piece) {
     enPassantablePiece = piece;
+}
+
+// check if two pieces are equal to each other
+bool BoardModel::pieceEqualsOtherPiece(Piece* pieceOne, Piece* pieceTwo) const {
+    if(pieceOne->getX() != pieceTwo->getX()){
+        return false;
+    }
+    if(pieceOne->getY() != pieceTwo->getY()){
+        return false;
+    }
+    if(pieceOne->getColour() != pieceTwo->getColour()){
+        return false;
+    }
+    if(pieceOne->getName() != pieceTwo->getName()){
+        return false;
+    }
+    
+    return true;
 }
