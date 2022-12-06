@@ -39,7 +39,7 @@ int BoardController::parseX(string coords) {
     return x;
 }
 
-int BoardController::parseX(string coords) {
+int BoardController::parseY(string coords) {
     int y;
     map<char, int> yMap;
 

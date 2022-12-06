@@ -15,9 +15,9 @@ class Computer : public User {
     std::string colour;
     int level;
     Piece* board[8][8];
-    vector<Piece*> blackPieces;
-    vector<Piece*> whitePieces;        // list of pices on board
-    vector<pair<int, int>> movesList;  // list of possible moves for a piece
+    std::vector<Piece*> blackPieces;
+    std::vector<Piece*> whitePieces;        // list of pices on board
+    std::vector<std::pair<int, int>> movesList;  // list of possible moves for a piece
 
     Piece* getRandPiece();
     void addToMoveList(int x, int y);
