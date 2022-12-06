@@ -13,7 +13,7 @@ bool ChessPiece::willNextMoveStopCurrentCheck(int newX, int newY){
     return false;
 }
 
-string ChessPiece::getColour() const {
+std::string ChessPiece::getColour() const {
     return "";
 }
 
@@ -29,7 +29,7 @@ BoardModel* ChessPiece::getBoard() const {
     return nullptr;
 }
 
-string ChessPiece::getName() const {
+std::string ChessPiece::getName() const {
     return "";
 }
 
