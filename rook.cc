@@ -1,4 +1,6 @@
 #include "rook.h"
+#include "boardmodel.h"
+#include "invalidmoveexception.h"
 #include "piece.h"
 #include <string>
 using namespace std;
@@ -41,8 +43,7 @@ bool Rook::canMove(const int newX, const int newY) {
     }
 
     if (model->getState(newX,newY) != nullptr &&
-            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
-            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+            model->getState(newX,newY)->getColour() == colour) {
         return false; // return false if new square is occupied by one of our own pieces
     }
 
@@ -83,8 +84,7 @@ void Rook::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
 
 bool Rook::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
-        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
-                model->lastActionX, model->lastActionY, newX, newY);
+        model->makeMove(x, y, newX, newY);
         model->undo();
         return true;
     } catch (InvalidMoveException &t) {

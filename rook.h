@@ -1,6 +1,7 @@
 // rook.h
 #ifndef _ROOK_H_
 #define _ROOK_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>

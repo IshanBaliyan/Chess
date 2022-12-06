@@ -1,6 +1,10 @@
 #include "piece.h"
+#include "invalidmoveexception.h"
 #include <string>
 using namespace std;
 
-Piece::~Piece() {}
+void Piece::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
+    throw InvalidMoveException{};
+}
 
+Piece::~Piece() {}

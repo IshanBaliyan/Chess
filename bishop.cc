@@ -1,4 +1,6 @@
 #include "bishop.h"
+#include "boardmodel.h"
+#include "invalidmoveexception.h"
 #include "piece.h"
 #include <string>
 using namespace std;
@@ -58,8 +60,8 @@ bool Bishop::canMove(const int newX, const int newY) {
     }
 
     if (model->getState(newX,newY) != nullptr &&
-            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
-            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+            ((model->getState(newX,newY)->getColour() == "black" && colour == "black") ||
+            (model->getState(newX,newY)->getColour() == "white" && colour == "white"))) {
         return false; // return false if new square is occupied by one of our own pieces
     }
 
@@ -99,8 +101,7 @@ void Bishop::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &l
 
 bool Bishop::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
-        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
-                model->lastActionX, model->lastActionY, newX, newY);
+        model->makeMove(x, y, newX, newY);
         model->undo();
         return true;
     } catch (InvalidMoveException &t) {

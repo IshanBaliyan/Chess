@@ -1,6 +1,7 @@
 // bishop.h
 #ifndef _BISHOP_H_
 #define _BISHOP_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>

@@ -1,6 +1,7 @@
 // king.h
 #ifndef _KING_H_
 #define _KING_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>
