@@ -1,6 +1,7 @@
 // pawn.h
 #ifndef _PAWN_H_
 #define _PAWN_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>

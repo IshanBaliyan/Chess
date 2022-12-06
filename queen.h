@@ -1,6 +1,7 @@
 // queen.h
 #ifndef _QUEEN_H_
 #define _QUEEN_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>

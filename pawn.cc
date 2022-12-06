@@ -1,5 +1,11 @@
 #include "pawn.h"
+#include "boardmodel.h"
+#include "invalidmoveexception.h"
 #include "piece.h"
+#include "rook.h"
+#include "queen.h"
+#include "bishop.h"
+#include "knight.h"
 #include <string>
 using namespace std;
 
@@ -38,9 +44,8 @@ bool Pawn::canMove(const int newX, const int newY) {
         return false;
     }
 
-    if (model->getState(newX,newY) != nullptr &&
-            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
-            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+    if (model->getState(newX,newY) != nullptr && 
+            model->getState(newX,newY)->getColour() == colour) {
         return false; // return false if new square is occupied by one of our own pieces
     }
 
@@ -119,17 +124,17 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
         
         Piece *piece = nullptr;
         if (replacePiece == "R") {
-            piece = new Rook(model, "R", colour, x, y, comp);
+            piece = new Rook(model, "R", colour, x, y, comp, false);
         } else if (replacePiece == "Q") {
-            piece = new Queen(model, "R", colour, x, y, comp);
+            piece = new Queen(model, "Q", colour, x, y, comp);
         } else if (replacePiece == "N") {
-            piece = new Knight(model, "R", colour, x, y, comp);
+            piece = new Knight(model, "N", colour, x, y, comp);
         } else if (replacePiece == "B") {
-            piece = new Bishop(model, "R", colour, x, y, comp);
+            piece = new Bishop(model, "B", colour, x, y, comp);
         }
 
-        removePieceFromBoard(this);
-        addPiece(piece, piece->x, piece->y);
+        model->removePieceFromBoard(this);
+        model->addPiece(piece, piece->getX(), piece->getY());
 
         lastActionPiece = piece;
     }
@@ -137,8 +142,7 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
 
 bool Pawn::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
-        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
-                model->lastActionX, model->lastActionY, newX, newY);
+        model->makeMove(x, y, newX, newY);
         model->undo();
         return true;
     } catch (InvalidMoveException &t) {

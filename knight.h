@@ -1,6 +1,7 @@
 // knight.h
 #ifndef _KNIGHT_H_
 #define _KNIGHT_H_
+#include "boardmodel.h"
 #include "piece.h"
 #include "decorator.h"
 #include <string>
