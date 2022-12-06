@@ -267,6 +267,9 @@ void BoardModel::nextTurn() {
 
 void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
     try{
+        if(myBoard[currentX][currentY] == nullptr){
+            return;
+        }
         cout << currentX << " " << currentY << " | " << newX << " " << newY << endl;
         myBoard[currentX][currentY]->makeMove(lastCapturedPiece, lastActionPiece, lastActionX, lastActionY,
         newX, newY);
@@ -286,16 +289,7 @@ void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int
 }
 
 bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
-    bool canMove = false;
-    try {
-        makeMove(currX, currY, nextX, nextY);
-        canMove = true;
-        undo();
-    } catch (InvalidMoveException& t) {
-        canMove = false;
-    }
-
-    return canMove;
+    return myBoard[currX][currY].canMove(nextX, nextY);
 }
 
 Piece* BoardModel::getEnPassantablePiece () const {
