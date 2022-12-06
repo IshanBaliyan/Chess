@@ -45,20 +45,6 @@ void Computer::addToMoveList(int x, int y) {
     movesList.push_back(coords);
 }
 
-bool Computer::checkMove(int currX, int currY, int nextX, int nextY) {
-    bool canMove = false;
-    BoardModel* boardmodel = new BoardModel(board);
-    try {
-        boardmodel->makeMove(currX, currY, nextX, nextY);
-        canMove = true;
-        boardmodel->undo();
-    } catch (InvalidMoveException& t) {
-        canMove = false;
-    }
-
-    return canMove;
-}
-
 void Computer::findPossibleMoves(Piece* piece) {
     int currX = piece->getX();
     int currY = piece->getY();
@@ -71,49 +57,53 @@ void Computer::findPossibleMoves(Piece* piece) {
     int minX = 0;
     int minY = 0;
 
+    BoardModel* boardmodel = new BoardModel(board);
+
     if (piece->getName() == "P") {
         if (piece->getColour() == "white") {  // add possible moves if piece is white pawn
             nextY++;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
+
+
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
                 addToMoveList(nextX, nextY);
             }
 
             nextY = currY + 2;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX + 1;
             nextY = currY + 1;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX - 1;
             nextY = currX + 1;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
                 addToMoveList(nextX, nextY);
             }
         } else {  // add possible moves if piece is black pawn
             nextY--;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
                 addToMoveList(nextX, nextY);
             }
 
             nextY = currY - 2;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX + 1;
             nextY = currY - 1;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX - 1;
             nextY = currX - 1;
-            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
                 addToMoveList(nextX, nextY);
             }
         }
@@ -122,23 +112,23 @@ void Computer::findPossibleMoves(Piece* piece) {
     if (piece->getName() == "N") {
         nextX++;
         nextY += 2;
-        if (checkMove(currX, currY, nextX, nextY)) {
+        if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextY = currY - 2;
-        if (checkMove(currX, currY, nextX, nextY)) {
+        if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextX = currX - 1;
         nextY = currY + 2;
-        if (checkMove(currX, currY, nextX, nextY)) {
+        if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextY = currY - 2;
-        if (checkMove(currX, currY, nextX, nextY)) {
+        if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
     }
@@ -146,7 +136,7 @@ void Computer::findPossibleMoves(Piece* piece) {
     if ((piece->getName() == "R") || (piece->getName() == "Q")) {  // add possible moves for rook
         while (nextX <= maxX) {                                    // possible moves to the right
             nextX++;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -154,14 +144,14 @@ void Computer::findPossibleMoves(Piece* piece) {
         nextX = currX;
         while (nextX >= minX) {  // possible moves to left
             nextX--;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
 
         while (nextY >= maxY) {
             nextY++;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -169,7 +159,7 @@ void Computer::findPossibleMoves(Piece* piece) {
         nextY = currY;
         while (nextY <= minY) {
             nextY--;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -179,7 +169,7 @@ void Computer::findPossibleMoves(Piece* piece) {
         while ((nextX <= maxX) && (nextY <= maxY)) {
             nextX++;
             nextY++;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -189,7 +179,7 @@ void Computer::findPossibleMoves(Piece* piece) {
         while ((nextX <= maxX) && (nextY >= minY)) {
             nextX++;
             nextY--;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -199,7 +189,7 @@ void Computer::findPossibleMoves(Piece* piece) {
         while ((nextX >= minX) && (nextY <= maxY)) {
             nextX--;
             nextY++;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -209,26 +199,26 @@ void Computer::findPossibleMoves(Piece* piece) {
         while ((nextX >= minX) && (nextY >= minY)) {
             nextX--;
             nextY--;
-            if (checkMove(currX, currY, nextX, nextY)) {
+            if (boardmodel->checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
     }
 
     if (piece->getName() == "K") {
-        if (checkMove(currX, currY, nextX + 1, nextY + 1)) {
+        if (boardmodel->checkMove(currX, currY, nextX + 1, nextY + 1)) {
             addToMoveList(nextX + 1, nextY + 1);
         }
 
-        if (checkMove(currX, currY, nextX + 1, nextY - 1)) {
+        if (boardmodel->checkMove(currX, currY, nextX + 1, nextY - 1)) {
             addToMoveList(nextX + 1, nextY - 1);
         }
 
-        if (checkMove(currX, currY, nextX - 1, nextY + 1)) {
+        if (boardmodel->checkMove(currX, currY, nextX - 1, nextY + 1)) {
             addToMoveList(nextX - 1, nextY + 1);
         }
 
-        if (checkMove(currX, currY, nextX - 1, nextY - 1)) {
+        if (boardmodel->checkMove(currX, currY, nextX - 1, nextY - 1)) {
             addToMoveList(nextX - 1, nextY - 1);
         }
     }

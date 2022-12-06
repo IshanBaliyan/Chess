@@ -50,6 +50,7 @@ class BoardModel : public Subject {
   void nextTurn(); // Forward to next black/white player's turn
   void makeMove(int currentX, int currentY, int newX, int newY); // Throws error if the move is not possible
   void makeMoveWithPawnPromotion(std::string replacePiece,int currentX, int currentY, int newX, int newY);
+  bool checkMove(int currX, int currY, int nextX, int nextY);  // checks if piece is able to move to x, y position
 };
 
 #endif

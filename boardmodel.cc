@@ -2,6 +2,8 @@
 #include "piece.h"
 #include "invalidmoveexception.h"
 
+using namespace std;
+
 BoardModel::BoardModel(Piece* boardIn[8][8]){
     // Must copy board over manually, since we cannot use MIL with two-dimensional array
     // in current C++ version
@@ -53,7 +55,7 @@ bool BoardModel::isCheck(){
     if(turn == "black"){
         // Loop through all white's pieces and see if they can strike the king
         for(Piece* whitePiece : whitePieces){
-            if(whitePiece->canMove(blackKing->getX(), blackKing->getY()) == true){
+            if(checkMove(whitePiece->getX(), whitePiece->getY(), blackKing->getX(), blackKing->getY()) == true){
                 return true;
             }
         }
@@ -62,7 +64,7 @@ bool BoardModel::isCheck(){
     else{
         // Loop through all black's pieces and see if they can strike the king
         for(Piece* blackPiece : blackPieces){
-            if(blackPiece->canMove(whiteKing->getX(), whiteKing->getY())){
+            if(checkMove(blackPiece->getX(), blackPiece->getY(), whiteKing->getX(), whiteKing->getY())){
                 return true;
             }
         }
@@ -263,4 +265,17 @@ void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int
     } catch (InvalidMoveException& t){
         throw;
     }
+}
+
+bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
+    bool canMove = false;
+    try {
+        makeMove(currX, currY, nextX, nextY);
+        canMove = true;
+        undo();
+    } catch (InvalidMoveException& t) {
+        canMove = false;
+    }
+
+    return canMove;
 }

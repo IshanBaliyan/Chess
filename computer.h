@@ -21,7 +21,6 @@ class Computer : public User {
 
     Piece* getRandPiece();
     void addToMoveList(int x, int y);
-    bool checkMove(int currX, int currY, int nextX, int nextY);  // checks if piece is able to move to x, y position
     void findPossibleMoves(Piece* piece);                        // add all possible moves for piece to moveLists
     string convertMove(int x, int y);                            // converts x y coordinates to a move (eg. 0 ,0 => "a1")
     string getRandomMove();
