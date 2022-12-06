@@ -87,10 +87,6 @@ int Knight::getY() const {
     return y;
 }
 
-BoardModel *Knight::getBoard() const {
-    return model;
-}
-
 string Knight::getName() const {
     return name;
 }

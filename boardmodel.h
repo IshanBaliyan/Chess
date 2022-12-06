@@ -12,8 +12,8 @@ class Piece;
 class BoardModel : public Subject {
   Piece*** myBoard; // Really means Piece*[][], two-dimensional array
   std::string turn;
-  set<Piece*> blackPieces;
-  set<Piece*> whitePieces;
+  std::set<Piece*> blackPieces;
+  std::set<Piece*> whitePieces;
 
   // Need for finding check, checkmate, stalemate
   Piece *whiteKing;
