@@ -3,24 +3,148 @@
 #include <string>
 using namespace std;
 
-Pawn::Pawn(Board* board, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, board{board}, name{name}, colour{colour}, x{x}, y{y} {}
+Pawn::Pawn(BoardModel *model, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y} {}
 
-void Pawn::makeMove(Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){
-    //TODO: [ADD CODE HERE]
+bool Pawn::canMove(const int newX, const int newY) {
+    int vertdistance = 0;
+    int startY = 0;
+
+    if (colour == "white") {
+        vertdistance = newY - y;
+        startY = 1;
+    } else if (colour == "black") {
+        vertdistance = y - newY;
+        startY = 6;
+    }
+
+    if (vertdistance == 2 && x == newX) {
+        if (y != startY) { // If pawn is not on its starting row, you can't move two squares
+            return false;
+        } else if (model->getState(newX,newY) != nullptr) { // no capture if 2 space move
+            return false;
+        }
+    } else if (vertdistance != 1) { // can't move more/less than 1 or 2 upwards
+        return false;
+    } else if (x == newX) {
+        if (model->getState(newX,newY) != nullptr) { // if forward move, cannot be capture
+            return false;
+        }
+    } else if (x - newX == 1 || newX - x == 1) { // if diag move, must be a capture
+        if (model->getState(newX,newY) == nullptr && 
+                *(model->getState(newX,y)) != *(model->enPassantablePiece)) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+    if (model->getState(newX,newY) != nullptr &&
+            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
+            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+        return false; // return false if new square is occupied by one of our own pieces
+    }
+
+    return true;
+}
+
+void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
+    if (!canMove(newX, newY)) {
+        throw InvalidMoveException{}; // TODO: add params?
+    }
+    Piece *tmpLastCapturedPiece = lastCapturedPiece;
+    Piece *tmpLastActionPiece = lastActionPiece;
+    int tmpLastActionX = lastActionX;
+    int tmpLastActionY = lastActionY;
+
+    lastCapturedPiece = model->board()[newX][newY];
+    model->board()[newX][newY] = model->board()[x][y];
+    model->board()[x][y] = nullptr;
+    lastActionX = x;
+    lastActionY = y;
+    x = newX;
+    y = newY;
+    lastActionPiece = this;
+    model->removePieceFromBoard(lastCapturedPiece);
+
+    if (model->isCheck()) {
+        model->undo();
+        lastActionPiece = tmpLastActionPiece;
+        lastCapturedPiece = tmpLastCapturedPiece;
+        lastActionX = tmpLastActionX;
+        lastActionY = tmpLastActionY;
+        throw InvalidMoveException{};
+    } else {
+        model->deletePiece(tmpLastCapturedPiece);
+    }
 }
 
 // Only implement the following method for the PAWN (skip for other pieces)
 // Method for pawn (only implement for pawn), where pawn reaches end of
 // board and must be changed to one of Queen, Rook, Bishop, Knight
-void Pawn::makeMove(string replacePiece, Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){}
+void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
+    if (!canMove(newX, newY) || (newY != 7 && newY != 0)) {
+        throw InvalidMoveException{}; // TODO: add params?
+    }
 
+    if (replacePiece != "R" && replacePiece != "Q" || 
+            replacePiece != "N" || replacePiece != "B") {
+        throw InvalidMoveException{};
+    }
 
-bool Pawn::willNextMoveCauseCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    Piece *tmpLastCapturedPiece = lastCapturedPiece;
+    Piece *tmpLastActionPiece = lastActionPiece;
+    int tmpLastActionX = lastActionX;
+    int tmpLastActionY = lastActionY;
+    
+
+    lastCapturedPiece = model->board()[newX][newY];
+    model->board()[newX][newY] = model->board()[x][y];
+    model->board()[x][y] = nullptr;
+    lastActionX = x;
+    lastActionY = y;
+    x = newX;
+    y = newY;
+    lastActionPiece = this;
+    model->removePieceFromBoard(lastCapturedPiece);
+
+    if (model->isCheck()) {
+        model->undo();
+        lastActionPiece = tmpLastActionPiece;
+        lastCapturedPiece = tmpLastCapturedPiece;
+        lastActionX = tmpLastActionX;
+        lastActionY = tmpLastActionY;
+        throw InvalidMoveException{};
+    } else {
+        model->deletePiece(tmpLastCapturedPiece);
+        
+        Piece *piece = nullptr;
+        if (replacePiece == "R") {
+            piece = new Rook(model, "R", colour, x, y, comp);
+        } else if (replacePiece == "Q") {
+            piece = new Queen(model, "R", colour, x, y, comp);
+        } else if (replacePiece == "N") {
+            piece = new Knight(model, "R", colour, x, y, comp);
+        } else if (replacePiece == "B") {
+            piece = new Bishop(model, "R", colour, x, y, comp);
+        }
+
+        removePieceFromBoard(this);
+        addPiece(piece, piece->x, piece->y);
+
+        lastActionPiece = piece;
+    }
 }
 
 bool Pawn::willNextMoveStopCurrentCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    try {
+        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
+                model->lastActionX, model->lastActionY, newX, newY);
+        model->undo();
+        return true;
+    } catch (InvalidMoveException &t) {
+        return false;
+    }
+    return false;
 }
 
 string Pawn::getColour() const {
@@ -35,8 +159,8 @@ int Pawn::getY() const {
     return y;
 }
 
-Board* Pawn::getBoard() const {
-    return board;
+BoardModel *Pawn::getBoard() const {
+    return model;
 }
 
 string Pawn::getName() const {
