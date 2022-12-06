@@ -66,36 +66,36 @@ void King::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
         }
         if (newX == x + 2) { // if castling kingside (right side)
             for (int i=x+1;i<=newX;++i) { // make sure no checks while mid-castle
-                model->board()[i][y] = model->board()[x][y]; // move king to space
-                model->board()[x][y] = nullptr;
+                model->setState(i,y, model->getState(x,y)); // move king to space
+                model->setState(x, y, nullptr);
                 if (model->isCheck()) {
-                    model->board()[x][y] = model->board()[i][y]; // revert king back
-                    model->board()[i][y] = nullptr;
+                    model->setState(x, y, model->getState(i,y)); // revert king back
+                    model->setState(i, y, nullptr);
                     throw InvalidMoveException{};
                 }
-                model->board()[x][y] = model->board()[i][y]; // revert king back
-                model->board()[i][y] = nullptr;
+                model->setState(x, y, model->getState(i,y)); // revert king back
+                model->setState(i, y, nullptr);
             }
             try {
-                model->board()[newX+1][y]->makeMove(lastCapturedPiece, lastActionPiece, 
+                model->getState(newX+1, y)->makeMove(lastCapturedPiece, lastActionPiece, 
                     lastActionX, lastActionY, newX-1, y); // if no check, move rook
             } catch (InvalidMoveException &t) {
                 throw;
             }
         } else if (newX == x - 2) { // if castling queenside (left side)
             for (int i=x-1;i>=newX;--i) { // make sure no checks while mid-castle
-                model->board()[i][y] = model->board()[x][y]; // move king to space
-                model->board()[x][y] = nullptr;
+                model->setState(i, y, model->getState(x, y)); // move king to space
+                model->setState(x, y, nullptr);
                 if (model->isCheck()) {
-                    model->board()[x][y] = model->board()[i][y]; // revert king back
-                    model->board()[i][y] = nullptr;
+                    model->setState(x, y, model->getState(i, y)); // revert king back
+                    model->setState(i, y, nullptr);
                     throw InvalidMoveException{};
                 }
-                model->board()[x][y] = model->board()[i][y]; // revert king back
-                model->board()[i][y] = nullptr;
+                model->setState(x, y, model->getState(i, y)); // revert king back
+                model->setState(i, y, nullptr);
             }
             try {
-                model->board()[newX-2][y]->makeMove(lastCapturedPiece, lastActionPiece, 
+                model->getState(newX-2, y)->makeMove(lastCapturedPiece, lastActionPiece, 
                     lastActionX, lastActionY, newX+1, y); // if no check, move rook
             } catch (InvalidMoveException &t) {
                 throw;
@@ -111,9 +111,9 @@ void King::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     int tmpLastActionX = lastActionX;
     int tmpLastActionY = lastActionY;
 
-    lastCapturedPiece = model->board()[newX][newY];
-    model->board()[newX][newY] = model->board()[x][y];
-    model->board()[x][y] = nullptr;
+    lastCapturedPiece = model->getState(newX, newY);
+    model->setState(newX, newY, model->getState(x, y));
+    model->setState(x, y, nullptr);
     lastActionX = x;
     lastActionY = y;
     x = newX;

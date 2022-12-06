@@ -191,7 +191,6 @@ int BoardController::getComputerLevel(string player) {
 }
 
 Piece *BoardController::createPawn(string colour, int x, int y) {
-    model = new BoardModel(pieces);
     Piece *pawn = new Pawn{model, "P", colour, x, y, new ChessPiece};
     return pawn;
 }
@@ -202,6 +201,13 @@ void BoardController::initializeScores() {
 }
 
 void BoardController::createDefaultBoard() {
+
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            pieces[i][j] = nullptr;
+        }
+    }
+
     model = new BoardModel(pieces);
 
     // create all of the white pieces
@@ -247,6 +253,24 @@ void BoardController::createDefaultBoard() {
 
     Piece *queenB = new Queen{model, "Q", "black", 3, 7, new ChessPiece};
     Piece *kingB = new King{model, "K", "black", 4, 7, new ChessPiece};
+
+    // pieces[0][1] = pawnW1;
+    // pieces[1][1] = pawnW2;
+    // pieces[2][1] = pawnW3;
+    // pieces[3][1] = pawnW4;
+    // pieces[4][1] = pawnW5;
+    // pieces[5][1] = pawnW6;
+    // pieces[6][1] = pawnW7;
+    // pieces[7][1] = pawnW8;
+
+    // pieces[0][0] = 
+    // pieces[1][0] = 
+    // pieces[2][0] = 
+    // pieces[3][0] = 
+    // pieces[4][0] = 
+    // pieces[5][0] = 
+    // pieces[6][0] = 
+    // pieces[7][0] = 
 
     // add pieces to board
     model->addPiece(pawnW1, 0, 1);
@@ -304,10 +328,10 @@ void BoardController::setupGame() {
     string pieceName;
     string colour;
 
+    createDefaultBoard();
+
     // default current turn to white
     model->changeTurn("white");
-
-    createDefaultBoard();
 
     while (true) {
         currLine = getLine();
@@ -415,6 +439,12 @@ void BoardController::runGame() {
     string piece;
     string replacePiece;
 
+    // creates a BoardModel called model
+    createDefaultBoard();
+    
+    // default current turn to white
+    model->changeTurn("white");
+
     // Create a BoardView that connects with the BoardModel
     BoardView* view = new BoardView{model};
     
@@ -481,8 +511,9 @@ void BoardController::runGame() {
         model->display();
     }
 
-    // delete view
+    // delete view and model
     delete view;
+    delete model;
 }
 
 void BoardController::outputWins() {

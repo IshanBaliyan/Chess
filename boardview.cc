@@ -42,30 +42,29 @@ void BoardView::textDisplay(){
 
     // Cout current board as text
     for(int i = 7; i >= 0; i--){
+        int row = i + 1;
+        // Output row number before each horizontal line on the board
+        cout << row << " ";
+
         for(int j = 0; j < 8; j++){
             int col = j + 1;
-            int row = i + 1;
-
-            // Output row number before each horizontal line on the board
-            cout << row << " ";
-            
             if(subject->getState(j, i) == nullptr){
                 // all even rows have a white square on odd columns
                 if(row % 2 == 0){
                     if(col % 2 == 0){
-                        cout << "_" << endl;
+                        cout << "_";
                     }
                     else{
-                        cout << " " << endl;
+                        cout << " ";
                     }
                 }
                 // all odd rows have a black square on odd columns
                 else{
                     if(col % 2 == 0){
-                        cout << " " << endl;
+                        cout << " ";
                     }
                     else{
-                        cout << "_" << endl;
+                        cout << "_";
                     }
                 }
             }
@@ -76,9 +75,12 @@ void BoardView::textDisplay(){
                 // cout the name as lowercase, if the colour is black
                 if(subject->getState(j, i)->getColour() == "black"){
                     char letter = name[0];
-                    name = (letter - 'A' + 'a') + "";
+                    char lowercase = (letter - 'A' + 'a');
+                    cout << lowercase;
                 }
-                cout << name;
+                else{
+                    cout << name;
+                }
             }
         }
         cout << endl;

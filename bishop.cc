@@ -77,9 +77,9 @@ void Bishop::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &l
     int tmpLastActionX = lastActionX;
     int tmpLastActionY = lastActionY;
 
-    lastCapturedPiece = model->board()[newX][newY];
-    model->board()[newX][newY] = model->board()[x][y];
-    model->board()[x][y] = nullptr;
+    lastCapturedPiece = model->getState(newX, newY);
+    model->setState(newX, newY, model->getState(x, y));
+    model->setState(x, y, nullptr);
     lastActionX = x;
     lastActionY = y;
     x = newX;

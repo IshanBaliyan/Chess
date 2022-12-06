@@ -14,9 +14,9 @@ int main() {
     string whitePlayer;
     string blackPlayer;
 
-    while (getline(cin, currLine)) {
-        BoardController* boardController = new BoardController{};
+    BoardController* boardController = new BoardController{};
 
+    while (getline(cin, currLine)) {
         boardController->initializeScores();
 
         if (cin.eof()) {
@@ -36,6 +36,7 @@ int main() {
             boardController->setBlackPlayer(blackPlayer);
 
             boardController->runGame();
+            boardController->resetGame();
 
         } else if (command == "setup") {
             cout << "entered setup" << endl;  // remove later
@@ -43,6 +44,8 @@ int main() {
             boardController->setupGame();
         }
     }
+
+     
 
     return 0;
 }

@@ -63,16 +63,16 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     int tmpLastActionX = lastActionX;
     int tmpLastActionY = lastActionY;
 
-    lastCapturedPiece = model->board()[newX][newY];
-    model->board()[newX][newY] = model->board()[x][y];
-    model->board()[x][y] = nullptr;
+    lastCapturedPiece = model->getState(newX, newY);
+    model->setState(newX, newY, model->getState(x, y));
+    model->setState(x, y, nullptr);
     lastActionX = x;
     lastActionY = y;
     x = newX;
     y = newY;
     lastActionPiece = this;
     model->removePieceFromBoard(lastCapturedPiece);
-
+    
     if (model->isCheck()) {
         model->undo();
         lastActionPiece = tmpLastActionPiece;
@@ -106,9 +106,9 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
     int tmpLastActionY = lastActionY;
     
 
-    lastCapturedPiece = model->board()[newX][newY];
-    model->board()[newX][newY] = model->board()[x][y];
-    model->board()[x][y] = nullptr;
+    lastCapturedPiece = model->getState(newX, newY);
+    model->setState(newX, newY, model->getState(x, y));
+    model->setState(x, y, nullptr);
     lastActionX = x;
     lastActionY = y;
     x = newX;
@@ -124,7 +124,9 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
         lastActionY = tmpLastActionY;
         throw InvalidMoveException{};
     } else {
-        model->deletePiece(tmpLastCapturedPiece);
+        if(tmpLastCapturedPiece != nullptr){
+            model->deletePiece(tmpLastCapturedPiece);
+        }
         
         Piece *piece = nullptr;
         if (replacePiece == "R") {

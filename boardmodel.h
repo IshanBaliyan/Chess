@@ -10,7 +10,8 @@
 class Piece;
 
 class BoardModel : public Subject {
-  Piece*** myBoard; // Really means Piece*[][], two-dimensional array
+  Piece *myBoard[8][8]; // Board
+  
   std::string turn;
   std::set<Piece*> blackPieces;
   std::set<Piece*> whitePieces;
@@ -20,10 +21,10 @@ class BoardModel : public Subject {
   Piece *blackKing;
 
   // Variables to undo last move
-  Piece* lastCapturedPiece;
-  Piece* lastActionPiece;
-  int lastActionX;
-  int lastActionY;
+  Piece* lastCapturedPiece = nullptr;
+  Piece* lastActionPiece = nullptr;
+  int lastActionX = 0;
+  int lastActionY = 0;
 
   // Variable to handle en passant
   Piece* enPassantablePiece;
@@ -33,11 +34,10 @@ class BoardModel : public Subject {
  public:
   explicit BoardModel(Piece* boardIn[8][8]);
 
-  // Returns Piece*[][], but formatted as Piece*** for C++ constraints
-  Piece*** &board() { return myBoard; }
   void display(); // Notify observers, which display to user
   ~BoardModel();
   Piece* getState(int x, int y) const override; // Piece at given x and y position on board
+  void setState(int x, int y, Piece* piece);
 
   bool isCheck();
   bool isCheckmate();

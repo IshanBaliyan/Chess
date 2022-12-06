@@ -1,3 +1,4 @@
+#include <iostream>
 #include "boardmodel.h"
 #include "piece.h"
 #include "invalidmoveexception.h"
@@ -11,20 +12,22 @@ BoardModel::BoardModel(Piece* boardIn[8][8]){
         for(int j = 0; j < 8; j++){
             myBoard[i][j] = boardIn[i][j];
 
-            // Add each piece to the set of black pieces or set of white pieces for future use
-            if(myBoard[i][j]->getColour() == "black"){
-                blackPieces.insert(myBoard[i][j]);
-            } else{
-                whitePieces.insert(myBoard[i][j]);
-            }
-
-            // Assign king pointer if the piece is a King
-            if(boardIn[i][j]->getName() == "K"){
-                if(boardIn[i][j]->getColour() == "black"){
-                    blackKing = boardIn[i][j];
+            if(myBoard[i][j] != nullptr){
+                // Add each piece to the set of black pieces or set of white pieces for future use
+                if(myBoard[i][j]->getColour() == "black"){
+                    blackPieces.insert(myBoard[i][j]);
+                } else{
+                    whitePieces.insert(myBoard[i][j]);
                 }
-                else{
-                    whiteKing = boardIn[i][j];
+
+                // Assign king pointer if the piece is a King
+                if(boardIn[i][j]->getName() == "K"){
+                    if(boardIn[i][j]->getColour() == "black"){
+                        blackKing = boardIn[i][j];
+                    }
+                    else{
+                        whiteKing = boardIn[i][j];
+                    }
                 }
             }
         }
@@ -35,20 +38,24 @@ void BoardModel::display(){
     notifyObservers();
 }
 
-
 BoardModel::~BoardModel(){
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             deletePiece(myBoard[i][j]);
         }
     }
-    delete myBoard;
+    // Don't need to delete myBoard, since it will be removed by destructor itself
+    // delete myBoard;
 }
 
 Piece* BoardModel::getState(int x, int y) const {
     return myBoard[x][y];
 }
 
+
+void BoardModel::setState(int x, int y, Piece* piece) {
+    myBoard[x][y] = piece;
+}
 
 bool BoardModel::isCheck(){
     // If black is in check
@@ -130,10 +137,20 @@ void BoardModel::addPiece(Piece* piece, int x, int y){
         blackPieces.insert(piece);
     }
     else{
-        blackPieces.insert(piece);
+        whitePieces.insert(piece);
     }
 
     myBoard[x][y] = piece;
+
+    // Assign king pointer if the piece is a King
+    if(myBoard[x][y]->getName() == "K"){
+        if(myBoard[x][y]->getColour() == "black"){
+            blackKing = myBoard[x][y];
+        }
+        else{
+            whiteKing = myBoard[x][y];
+        }
+    }
 }
 
 bool BoardModel::isPieceOnBoard(Piece* piece){
@@ -250,6 +267,7 @@ void BoardModel::nextTurn() {
 
 void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
     try{
+        cout << currentX << " " << currentY << " | " << newX << " " << newY << endl;
         myBoard[currentX][currentY]->makeMove(lastCapturedPiece, lastActionPiece, lastActionX, lastActionY,
         newX, newY);
     } catch (InvalidMoveException& t){
