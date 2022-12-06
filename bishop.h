@@ -13,6 +13,7 @@ class Bishop : public Decorator {
     int x;
     int y;
     bool canMove(const int newX, const int newY);
+    int abs(int x);
     public:
         Bishop(BoardModel *model, std::string name, std::string colour, int x, int y, Piece *comp);
 

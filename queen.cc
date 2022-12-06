@@ -7,7 +7,7 @@ using namespace std;
 
 Queen::Queen(BoardModel *model, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y} {}
 
-int abs(int x) {
+int Queen::abs(int x) {
     if (x < 0) {
         return -x;
     }
