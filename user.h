@@ -7,9 +7,9 @@
 
 class User {
     public:
-        virtual string getType() const = 0;
-        virtual string getMove() = 0;
-        virtual string getColour() const = 0;
+        virtual std::string getType() const = 0;
+        virtual std::string getMove() = 0;
+        virtual std::string getColour() const = 0;
 };
 
 #endif
