@@ -7,4 +7,8 @@ void Piece::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&las
     throw InvalidMoveException{};
 }
 
+bool Piece::getCanCastle() const {
+    return false;
+}
+
 Piece::~Piece() {}

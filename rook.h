@@ -24,6 +24,7 @@ class Rook : public Decorator {
         int getY() const override;
         BoardModel *getBoard() const override;
         std::string getName() const override;
+        bool getCanCastle() const override;
 };
 
 #endif
