@@ -3,24 +3,110 @@
 #include <string>
 using namespace std;
 
-Bishop::Bishop(Board* board, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, board{board}, name{name}, colour{colour}, x{x}, y{y} {}
+Bishop::Bishop(BoardModel *model, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y} {}
 
-void Bishop::makeMove(Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){
-    //TODO: [ADD CODE HERE]
+int abs(int x) {
+    if (x < 0) {
+        return -x;
+    }
+    return x;
 }
 
-// Only implement the following method for the PAWN (skip for other pieces)
-// Method for pawn (only implement for pawn), where pawn reaches end of
-// board and must be changed to one of Queen, Rook, Bishop, Knight
-void Bishop::makeMove(string replacePiece, Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){}
+bool Bishop::canMove(const int newX, const int newY) {
+    if (x == newX || y == newY) {
+        return false;
+    } else if (abs(newX - x) == abs(newY - y)) { // if newpos is diag from currentpos
+        if (newX > x) {
+            if (newY > y) {
+                int j=y+1;
+                for (int i=x+1;i<newX;++i) {
+                    if (model->getState(i,j) != nullptr) {
+                        return false; // return false if there is a piece before destination
+                    }
+                    ++j;
+                }
+            } else if (newY < y) {
+                int j=y-1;
+                for (int i=x+1;i<newX;++i) {
+                    if (model->getState(i,j) != nullptr) {
+                        return false;
+                    }
+                    --j;
+                }
+            }
+        } else if (newX < x) {
+            if (newY > y) {
+                int j=y+1;
+                for (int i=x-1;i>newX;--i) {
+                    if (model->getState(i,j) != nullptr) {
+                        return false;
+                    }
+                    ++j;
+                }
+            } else if (newY < y) {
+                int j=y-1;
+                for (int i=x-1;i>newX;--i) {
+                    if (model->getState(i,j) != nullptr) {
+                        return false;
+                    }
+                    --j;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
 
+    if (model->getState(newX,newY) != nullptr &&
+            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
+            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+        return false; // return false if new square is occupied by one of our own pieces
+    }
 
-bool Bishop::willNextMoveCauseCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    return true;
+}
+
+void Bishop::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
+    if (!canMove(newX, newY)) {
+        throw InvalidMoveException{}; // TODO: add params?
+    }
+    Piece *tmpLastCapturedPiece = lastCapturedPiece;
+    Piece *tmpLastActionPiece = lastActionPiece;
+    int tmpLastActionX = lastActionX;
+    int tmpLastActionY = lastActionY;
+
+    lastCapturedPiece = model->board()[newX][newY];
+    model->board()[newX][newY] = model->board()[x][y];
+    model->board()[x][y] = nullptr;
+    lastActionX = x;
+    lastActionY = y;
+    x = newX;
+    y = newY;
+    lastActionPiece = this;
+    model->removePieceFromBoard(lastCapturedPiece);
+
+    if (model->isCheck()) {
+        model->undo();
+        lastActionPiece = tmpLastActionPiece;
+        lastCapturedPiece = tmpLastCapturedPiece;
+        lastActionX = tmpLastActionX;
+        lastActionY = tmpLastActionY;
+        throw InvalidMoveException{};
+    } else {
+        model->deletePiece(tmpLastCapturedPiece);
+    }
 }
 
 bool Bishop::willNextMoveStopCurrentCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    try {
+        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
+                model->lastActionX, model->lastActionY, newX, newY);
+        model->undo();
+        return true;
+    } catch (InvalidMoveException &t) {
+        return false;
+    }
+    return false;
 }
 
 string Bishop::getColour() const {
@@ -35,8 +121,8 @@ int Bishop::getY() const {
     return y;
 }
 
-Board* Bishop::getBoard() const {
-    return board;
+BoardModel *Bishop::getBoard() const {
+    return model;
 }
 
 string Bishop::getName() const {

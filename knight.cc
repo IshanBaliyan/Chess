@@ -3,24 +3,76 @@
 #include <string>
 using namespace std;
 
-Knight::Knight(Board* board, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, board{board}, name{name}, colour{colour}, x{x}, y{y} {}
+Knight::Knight(BoardModel *model, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y} {}
 
-void Knight::makeMove(Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){
-    //TODO: [ADD CODE HERE]
+int abs(int x) {
+    if (x < 0) {
+        return -x;
+    }
+    return x;
 }
 
-// Only implement the following method for the PAWN (skip for other pieces)
-// Method for pawn (only implement for pawn), where pawn reaches end of
-// board and must be changed to one of Queen, Rook, Bishop, Knight
-void Knight::makeMove(string replacePiece, Piece& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY){}
+bool Knight::canMove(const int newX, const int newY) {
+    if (x == newX || y == newY) {
+        return false;
+    } else if (abs(newX - x) == 2 && abs(newY - y) == 1) {
 
+    } else if (abs(newX - x) == 1 && abs(newY - y) == 2) {
 
-bool Knight::willNextMoveCauseCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    } else {
+        return false;
+    }
+
+    if (model->getState(newX,newY) != nullptr &&
+            ((model->getState(newX,newY)->colour == "black" && colour == "black") ||
+            (model->getState(newX,newY)->colour == "white" && colour == "white"))) {
+        return false; // return false if new square is occupied by one of our own pieces
+    }
+
+    return true;
+}
+
+void Knight::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
+    if (!canMove(newX, newY)) {
+        throw InvalidMoveException{}; // TODO: add params?
+    }
+    Piece *tmpLastCapturedPiece = lastCapturedPiece;
+    Piece *tmpLastActionPiece = lastActionPiece;
+    int tmpLastActionX = lastActionX;
+    int tmpLastActionY = lastActionY;
+
+    lastCapturedPiece = model->board()[newX][newY];
+    model->board()[newX][newY] = model->board()[x][y];
+    model->board()[x][y] = nullptr;
+    lastActionX = x;
+    lastActionY = y;
+    x = newX;
+    y = newY;
+    lastActionPiece = this;
+    model->removePieceFromBoard(lastCapturedPiece);
+
+    if (model->isCheck()) {
+        model->undo();
+        lastActionPiece = tmpLastActionPiece;
+        lastCapturedPiece = tmpLastCapturedPiece;
+        lastActionX = tmpLastActionX;
+        lastActionY = tmpLastActionY;
+        throw InvalidMoveException{};
+    } else {
+        model->deletePiece(tmpLastCapturedPiece);
+    }
 }
 
 bool Knight::willNextMoveStopCurrentCheck(int newX, int newY){
-    //TODO: [ADD CODE HERE]
+    try {
+        makeMove(model->lastCapturedPiece, model->lastActionPiece, 
+                model->lastActionX, model->lastActionY, newX, newY);
+        model->undo();
+        return true;
+    } catch (InvalidMoveException &t) {
+        return false;
+    }
+    return false;
 }
 
 string Knight::getColour() const {
@@ -35,8 +87,8 @@ int Knight::getY() const {
     return y;
 }
 
-Board* Knight::getBoard() const {
-    return board;
+BoardModel *Knight::getBoard() const {
+    return model;
 }
 
 string Knight::getName() const {
