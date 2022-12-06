@@ -15,7 +15,7 @@ int main() {
     string blackPlayer;
 
     while (getline(cin, currLine)) {
-        BoardController* boardController = new BoardController();
+        BoardController* boardController = new BoardController{};
 
         boardController->initializeScores();
 
