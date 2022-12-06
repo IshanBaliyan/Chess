@@ -36,8 +36,10 @@ bool Pawn::canMove(const int newX, const int newY) {
             return false;
         }
     } else if (x - newX == 1 || newX - x == 1) { // if diag move, must be a capture
-        if (model->getState(newX,newY) == nullptr && 
-                *(model->getState(newX,y)) != *(model->enPassantablePiece)) {
+        if (model->getState(newX,newY) == nullptr && // if moving to diag emmpty space,
+                ((model->getEnPassantablePiece() == nullptr) || // must be en passant
+                (model->getState(newX,y) == nullptr) || 
+                *(model->getState(newX,y)) != *(model->getEnPassantablePiece())) {
             return false;
         }
     } else {
@@ -80,10 +82,12 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
         throw InvalidMoveException{};
     } else {
         model->deletePiece(tmpLastCapturedPiece);
+        if (lastActionX + 2 == x || lastActionX == x + 2) {
+            setEnPassantablePiece(this);
+        }
     }
 }
 
-// Only implement the following method for the PAWN (skip for other pieces)
 // Method for pawn (only implement for pawn), where pawn reaches end of
 // board and must be changed to one of Queen, Rook, Bishop, Knight
 void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
