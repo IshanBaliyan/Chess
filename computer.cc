@@ -49,7 +49,7 @@ void Computer::findPossibleMoves(Piece* piece) {
     int currX = piece->getX();
     int currY = piece->getY();
     int nextX = currX;
-    int nextY = nextY;
+    int nextY = currY;
     pair<int, int> coords;
 
     int maxX = 7;
@@ -282,6 +282,9 @@ string Computer::getMove() {
     if (level == 1) {
         return getRandomMove();
     }
+
+    // just return nothing for now otherwise
+    return "";
 }
 
 string Computer::getType() const {
