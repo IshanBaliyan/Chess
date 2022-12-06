@@ -3,9 +3,9 @@
 #include "piece.h"
 #include <iostream>
 
-class ChessPiece: public Piece {
-        bool canMove(int newX, int newY) override;
+class ChessPiece: public Piece { 
  public:
+        bool canMove(int newX, int newY) override;
         void makeMove(Piece*& lastCapturedPiece, Piece*& lastActionPiece, int& lastActionX, int& lastActionY, int newX, int newY) override;
         bool willNextMoveStopCurrentCheck(int newX, int newY) override;
         std::string getColour() const override;

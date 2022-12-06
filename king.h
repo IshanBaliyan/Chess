@@ -12,12 +12,11 @@ class King : public Decorator {
     std::string colour;
     int x;
     int y;
-    bool canCastle;
-    bool canMove(const int newX, const int newY);
+    bool canCastle; 
     int abs(int x);
     public:
         King(BoardModel *model, std::string name, std::string colour, int x, int y, Piece *comp, bool canCastle = true);
-
+        bool canMove(const int newX, const int newY) override;
         void makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) override;
         bool willNextMoveStopCurrentCheck(int newX, int newY) override;
         std::string getColour() const override;

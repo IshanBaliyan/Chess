@@ -12,10 +12,9 @@ class Pawn : public Decorator {
     std::string colour;
     int x;
     int y;
-    bool canMove(const int newX, const int newY);
     public:
         Pawn(BoardModel *model, std::string name, std::string colour, int x, int y, Piece *comp);
-
+        bool canMove(const int newX, const int newY) override;
         void makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) override;
         void makeMove(std::string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY);
         bool willNextMoveStopCurrentCheck(int newX, int newY) override;
