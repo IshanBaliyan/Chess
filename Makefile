@@ -5,7 +5,7 @@ OBJECTS = bishop.o boardcontroller.o boardmodel.o boardview.o chesspiece.o compu
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${EXEC}
+	${CXX} ${CXXFLAGS} ${OBJECTS} -lX11 -o ${EXEC}
 
 -include ${DEPENDS}
 
