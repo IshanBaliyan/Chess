@@ -416,6 +416,9 @@ void BoardController::runGame() {
     int y2;
     string piece;
     string replacePiece;
+
+    // Create a BoardView that connects with the BoardModel
+    BoardView* view = new BoardView{model};
     
     while (isRunning) {
         currLine = getLine();
@@ -475,7 +478,13 @@ void BoardController::runGame() {
             cout << model->getTurn() << " resigns" << endl;
             isRunning = false;
         }
+
+        // Display the BoardView(s) that are connected to the BoardModel
+        model->display();
     }
+
+    // delete view
+    delete view;
 }
 
 void BoardController::outputWins() {

@@ -21,7 +21,7 @@ bool King::canMove(const int newX, const int newY) {
         if (canCastle) {
             if (newX > x && newX + 1 <= 7) { // if 
                 Piece *piece = model->getState(newX+1,y);
-                if (piece == nullptr || piece->getName() != "R" || !piece->canCastle()) {
+                if (piece == nullptr || piece->getName() != "R" || !piece->getCanCastle()) {
                     return false; // if there's no rook/it can't castle
                 }
                 for (int i=x+1;i<newX+1;++i) { // check if spaces inbetween are empty
@@ -31,7 +31,7 @@ bool King::canMove(const int newX, const int newY) {
                 }
             } else if (x > newX && newX - 2 >= 0) {
                 Piece *piece = model->getState(newX-2,y);
-                if (piece == nullptr || piece->getName() != "R" || !piece->canCastle()) {
+                if (piece == nullptr || piece->getName() != "R" || !piece->getCanCastle()) {
                     return false; // if there's no rook/it can't castle
                 }
                 for (int i=newX-1;i<x;++i) { // check if spaces inbetween are empty
@@ -76,10 +76,12 @@ void King::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
                 model->board()[x][y] = model->board()[i][y]; // revert king back
                 model->board()[i][y] = nullptr;
             }
-            model->board()[newX-1][y] = model->board()[newX+1][y]; // if no check, move rook
-            model->board()[newX+1][y] = nullptr;
-            model->board()[newX-1][y]->x = newX-1;
-            model->board()[newX-1][y]->canCastle = false;
+            try {
+                model->board()[newX+1][y]->makeMove(lastCapturedPiece, lastActionPiece, 
+                    lastActionX, lastActionY, newX-1, y); // if no check, move rook
+            } catch (InvalidMoveException &t) {
+                throw;
+            }
         } else if (newX == x - 2) { // if castling queenside (left side)
             for (int i=x-1;i>=newX;--i) { // make sure no checks while mid-castle
                 model->board()[i][y] = model->board()[x][y]; // move king to space
@@ -92,10 +94,12 @@ void King::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
                 model->board()[x][y] = model->board()[i][y]; // revert king back
                 model->board()[i][y] = nullptr;
             }
-            model->board()[newX+1][y] = model->board()[newX-2][y]; // if no check, move rook
-            model->board()[newX-2][y] = nullptr;
-            model->board()[newX+1][y]->x = newX+1;
-            model->board()[newX+1][y]->canCastle = false;
+            try {
+                model->board()[newX-2][y]->makeMove(lastCapturedPiece, lastActionPiece, 
+                    lastActionX, lastActionY, newX+1, y); // if no check, move rook
+            } catch (InvalidMoveException &t) {
+                throw;
+            } 
         }
         canCastle = false; // king cannot castle again
     }
@@ -132,8 +136,10 @@ void King::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
 
 bool King::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
+        bool castleval = canCastle;
         model->makeMove(x, y, newX, newY);
         model->undo();
+        canCastle = castleval;
         return true;
     } catch (InvalidMoveException &t) {
         return false;
@@ -161,3 +167,6 @@ string King::getName() const {
     return name;
 }
 
+bool King::getCanCastle() const {
+    return canCastle;
+}

@@ -15,6 +15,7 @@ class Piece {
         virtual int getY() const = 0;
         virtual BoardModel *getBoard() const = 0;
         virtual std::string getName() const = 0;
+        virtual bool getCanCastle() const;
 };
 
 #endif
