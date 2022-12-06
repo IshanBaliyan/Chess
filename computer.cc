@@ -5,6 +5,9 @@
 #include <string>
 #include <utility>
 
+#include "boardmodel.h"
+#include "invalidmoveexception.h"
+
 using namespace std;
 
 // Constructor
@@ -23,7 +26,7 @@ Computer::Computer(string type, string colour, Piece* boardIn[8][8]) : type{type
     }
 }
 
-Piece* Computer::getRandPiece()  {
+Piece* Computer::getRandPiece() {
     int randNum;
 
     if (colour == "white") {
@@ -35,14 +38,28 @@ Piece* Computer::getRandPiece()  {
     }
 }
 
-void Computer::addToMoveList(int x, int y)  {
+void Computer::addToMoveList(int x, int y) {
     pair<int, int> coords;
     coords.first = x;
     coords.second = x;
     movesList.push_back(coords);
 }
 
-void Computer::findPossibleMoves(Piece* piece)  {
+bool Computer::checkMove(int currX, int currY, int nextX, int nextY) {
+    bool canMove = false;
+    BoardModel* boardmodel = new BoardModel(board);
+    try {
+        boardmodel->makeMove(currX, currY, nextX, nextY);
+        canMove = true;
+        boardmodel->undo();
+    } catch (InvalidMoveException& t) {
+        canMove = false;
+    }
+
+    return canMove;
+}
+
+void Computer::findPossibleMoves(Piece* piece) {
     int currX = piece->getX();
     int currY = piece->getY();
     int nextX = currX;
@@ -57,46 +74,46 @@ void Computer::findPossibleMoves(Piece* piece)  {
     if (piece->getName() == "P") {
         if (piece->getColour() == "white") {  // add possible moves if piece is white pawn
             nextY++;
-            if (piece->canMove(nextX, nextY)) {  // check if can move forward one square
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
                 addToMoveList(nextX, nextY);
             }
 
             nextY = currY + 2;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can move two spaces forward
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX + 1;
             nextY = currY + 1;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can capture to right
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX - 1;
             nextY = currX + 1;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can capture to left
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
                 addToMoveList(nextX, nextY);
             }
         } else {  // add possible moves if piece is black pawn
             nextY--;
-            if (piece->canMove(nextX, nextY)) {  // check if can move forward one square
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if can move forward one square
                 addToMoveList(nextX, nextY);
             }
 
             nextY = currY - 2;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can move two spaces forward
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can move two spaces forward
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX + 1;
             nextY = currY - 1;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can capture to right
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to right
                 addToMoveList(nextX, nextY);
             }
 
             nextX = currX - 1;
             nextY = currX - 1;
-            if (piece->canMove(nextX, nextY)) {  // check if pawn can capture to left
+            if (checkMove(currX, currY, nextX, nextY)) {  // check if pawn can capture to left
                 addToMoveList(nextX, nextY);
             }
         }
@@ -105,23 +122,23 @@ void Computer::findPossibleMoves(Piece* piece)  {
     if (piece->getName() == "N") {
         nextX++;
         nextY += 2;
-        if (piece->canMove(nextX, nextY)) {
+        if (checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextY = currY - 2;
-        if (piece->canMove(nextX, nextY)) {
+        if (checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextX = currX - 1;
         nextY = currY + 2;
-        if (piece->canMove(nextX, nextY)) {
+        if (checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
 
         nextY = currY - 2;
-        if (piece->canMove(nextX, nextY)) {
+        if (checkMove(currX, currY, nextX, nextY)) {
             addToMoveList(nextX, nextY);
         }
     }
@@ -129,7 +146,7 @@ void Computer::findPossibleMoves(Piece* piece)  {
     if ((piece->getName() == "R") || (piece->getName() == "Q")) {  // add possible moves for rook
         while (nextX <= maxX) {                                    // possible moves to the right
             nextX++;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -137,14 +154,14 @@ void Computer::findPossibleMoves(Piece* piece)  {
         nextX = currX;
         while (nextX >= minX) {  // possible moves to left
             nextX--;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
 
         while (nextY >= maxY) {
             nextY++;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -152,7 +169,7 @@ void Computer::findPossibleMoves(Piece* piece)  {
         nextY = currY;
         while (nextY <= minY) {
             nextY--;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -162,7 +179,7 @@ void Computer::findPossibleMoves(Piece* piece)  {
         while ((nextX <= maxX) && (nextY <= maxY)) {
             nextX++;
             nextY++;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -172,7 +189,7 @@ void Computer::findPossibleMoves(Piece* piece)  {
         while ((nextX <= maxX) && (nextY >= minY)) {
             nextX++;
             nextY--;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -182,7 +199,7 @@ void Computer::findPossibleMoves(Piece* piece)  {
         while ((nextX >= minX) && (nextY <= maxY)) {
             nextX--;
             nextY++;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
@@ -192,32 +209,32 @@ void Computer::findPossibleMoves(Piece* piece)  {
         while ((nextX >= minX) && (nextY >= minY)) {
             nextX--;
             nextY--;
-            if (piece->canMove(nextX, nextY)) {
+            if (checkMove(currX, currY, nextX, nextY)) {
                 addToMoveList(nextX, nextY);
             }
         }
     }
 
     if (piece->getName() == "K") {
-        if (piece->canMove(nextX + 1, nextY + 1)) {
+        if (checkMove(currX, currY, nextX + 1, nextY + 1)) {
             addToMoveList(nextX + 1, nextY + 1);
         }
 
-        if (piece->canMove(nextX + 1, nextY - 1)) {
+        if (checkMove(currX, currY, nextX + 1, nextY - 1)) {
             addToMoveList(nextX + 1, nextY - 1);
         }
 
-        if (piece->canMove(nextX - 1, nextY + 1)) {
+        if (checkMove(currX, currY, nextX - 1, nextY + 1)) {
             addToMoveList(nextX - 1, nextY + 1);
         }
 
-        if (piece->canMove(nextX - 1, nextY - 1)) {
+        if (checkMove(currX, currY, nextX - 1, nextY - 1)) {
             addToMoveList(nextX - 1, nextY - 1);
         }
     }
 }
 
-string Computer::convertMove(int x, int y)  {
+string Computer::convertMove(int x, int y) {
     map<int, string> xMap;
     map<int, string> yMap;
 
@@ -242,7 +259,7 @@ string Computer::convertMove(int x, int y)  {
     return xMap[x] + yMap[y];
 }
 
-string Computer::getRandomMove()  {
+string Computer::getRandomMove() {
     int randNum;
     pair<int, int> randCoords;
     int x;
@@ -284,5 +301,3 @@ string Computer::getType() const {
 string Computer::getColour() const {
     return colour;
 }
-
-

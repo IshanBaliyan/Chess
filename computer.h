@@ -16,16 +16,16 @@ class Computer : public User {
     int level;
     Piece* board[8][8];
     vector<Piece*> blackPieces;
-    vector<Piece*> whitePieces;         // list of pices on board
+    vector<Piece*> whitePieces;        // list of pices on board
     vector<pair<int, int>> movesList;  // list of possible moves for a piece
 
     Piece* getRandPiece();
     void addToMoveList(int x, int y);
-    void findPossibleMoves(Piece *piece); // add all possible moves for piece to moveLists
-    string convertMove(int x, int y) ;  // converts x y coordinates to a move (eg. 0 ,0 => "a1")
+    bool checkMove(int currX, int currY, int nextX, int nextY);  // checks if piece is able to move to x, y position
+    void findPossibleMoves(Piece* piece);                        // add all possible moves for piece to moveLists
+    string convertMove(int x, int y);                            // converts x y coordinates to a move (eg. 0 ,0 => "a1")
     string getRandomMove();
     int getLevel();
-    
 
    public:
     Computer(string type, string colour, Piece* boardIn[8][8]);
