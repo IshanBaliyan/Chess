@@ -84,8 +84,10 @@ void Rook::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
 
 bool Rook::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
+        bool castleval = canCastle;
         model->makeMove(x, y, newX, newY);
         model->undo();
+        canCastle = castleval;
         return true;
     } catch (InvalidMoveException &t) {
         return false;
@@ -113,3 +115,6 @@ string Rook::getName() const {
     return name;
 }
 
+bool Rook::getCanCastle() const {
+    return canCastle;
+}

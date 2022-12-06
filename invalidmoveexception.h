@@ -10,6 +10,7 @@ class InvalidMoveException {
     std::string varExcept;
     public:
         InvalidMoveException(std::string varExcept);
+        InvalidMoveException();
         std::string getVarExcept() const;
         ~InvalidMoveException();
 };
