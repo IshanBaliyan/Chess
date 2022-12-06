@@ -4,9 +4,10 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 #include <vector>
-#include "piece.h"
 
+// forward declarations
 class Observer;
+class Piece;
 
 class Subject {
   std::vector<Observer*> observers;

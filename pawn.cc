@@ -39,7 +39,7 @@ bool Pawn::canMove(const int newX, const int newY) {
         if (model->getState(newX,newY) == nullptr && // if moving to diag emmpty space,
                 ((model->getEnPassantablePiece() == nullptr) || // must be en passant
                 (model->getState(newX,y) == nullptr) || 
-                *(model->getState(newX,y)) != *(model->getEnPassantablePiece())) {
+                model->pieceEqualsOtherPiece((model->getState(newX,y)) , (model->getEnPassantablePiece())))) {
             return false;
         }
     } else {
@@ -83,7 +83,7 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     } else {
         model->deletePiece(tmpLastCapturedPiece);
         if (lastActionX + 2 == x || lastActionX == x + 2) {
-            setEnPassantablePiece(this);
+            model->setEnPassantablePiece(this);
         }
     }
 }
@@ -95,8 +95,8 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
         throw InvalidMoveException{}; // TODO: add params?
     }
 
-    if (replacePiece != "R" && replacePiece != "Q" || 
-            replacePiece != "N" || replacePiece != "B") {
+    if (replacePiece != "R" && replacePiece != "Q" && 
+            replacePiece != "N" && replacePiece != "B") {
         throw InvalidMoveException{};
     }
 
@@ -165,10 +165,6 @@ int Pawn::getX() const {
 
 int Pawn::getY() const {
     return y;
-}
-
-BoardModel *Pawn::getBoard() const {
-    return model;
 }
 
 string Pawn::getName() const {

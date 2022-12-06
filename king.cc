@@ -7,7 +7,7 @@ using namespace std;
 
 King::King(BoardModel *model, string name, string colour, int x, int y, Piece *comp, bool canCastle) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y}, canCastle{canCastle} {}
 
-int abs(int x) {
+int King::abs(int x) {
     if (x < 0) {
         return -x;
     }
@@ -157,10 +157,6 @@ int King::getX() const {
 
 int King::getY() const {
     return y;
-}
-
-BoardModel *King::getBoard() const {
-    return model;
 }
 
 string King::getName() const {

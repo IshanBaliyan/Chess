@@ -1,6 +1,7 @@
 // boardview.cc
 #include "boardview.h"
 #include "window.h"
+#include "piece.h"
 #include <string>
 #include <iostream>
 using namespace std;

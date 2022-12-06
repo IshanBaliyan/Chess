@@ -32,7 +32,7 @@ class BoardController {
     int getComputerLevel(std::string player);
 
    public:
-    BoardController();
+    BoardController(){};
     void setWhitePlayer(std::string player);
     void setBlackPlayer(std::string player);
     std::string getWhitePlayer();

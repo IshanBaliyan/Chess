@@ -107,10 +107,6 @@ int Rook::getY() const {
     return y;
 }
 
-BoardModel *Rook::getBoard() const {
-    return model;
-}
-
 string Rook::getName() const {
     return name;
 }

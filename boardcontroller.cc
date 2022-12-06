@@ -39,7 +39,7 @@ int BoardController::parseX(string coords) {
     return x;
 }
 
-int BoardController::parseX(string coords) {
+int BoardController::parseY(string coords) {
     int y;
     map<char, int> yMap;
 
@@ -141,14 +141,12 @@ void BoardController::updateScore() {
 }
 
 bool BoardController::containsTwoKings() {
-    int i = 0;
-    int j = 0;
     Piece *piece;
     int numKingW = 0;
     int numKingB = 0;
 
-    for (i; i <= 7; i++) {  // loop over row
-        for (j; j <= 7; j++) {
+    for (int i = 0; i <= 7; i++) {  // loop over row
+        for (int j = 0; j <= 7; j++) {
             piece = model->getState(i, j);
             if (piece->getName() == "K") {
                 if (piece->getColour() == "white") {

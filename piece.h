@@ -10,10 +10,9 @@ class Piece {
         virtual void makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) = 0;
         virtual void makeMove(std::string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY);
         virtual bool willNextMoveStopCurrentCheck(int newX, int newY) = 0;
-        virtual string getColour() const = 0;
+        virtual std::string getColour() const = 0;
         virtual int getX() const = 0;
         virtual int getY() const = 0;
-        virtual BoardModel *getBoard() const = 0;
         virtual std::string getName() const = 0;
         virtual bool getCanCastle() const;
 };

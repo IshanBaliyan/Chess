@@ -12,8 +12,8 @@ class Piece;
 class BoardModel : public Subject {
   Piece*** myBoard; // Really means Piece*[][], two-dimensional array
   std::string turn;
-  set<Piece*> blackPieces;
-  set<Piece*> whitePieces;
+  std::set<Piece*> blackPieces;
+  std::set<Piece*> whitePieces;
 
   // Need for finding check, checkmate, stalemate
   Piece *whiteKing;
@@ -56,6 +56,7 @@ class BoardModel : public Subject {
   bool checkMove(int currX, int currY, int nextX, int nextY);  // checks if piece is able to move to x, y position
   Piece* getEnPassantablePiece() const;
   void setEnPassantablePiece(Piece* piece);
+  bool pieceEqualsOtherPiece(Piece* pieceOne, Piece* pieceTwo) const; // check if two pieces are equal
 };
 
 #endif
