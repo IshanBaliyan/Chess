@@ -83,7 +83,7 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     } else {
         model->deletePiece(tmpLastCapturedPiece);
         if (lastActionX + 2 == x || lastActionX == x + 2) {
-            setEnPassantablePiece(this);
+            model->setEnPassantablePiece(this);
         }
     }
 }

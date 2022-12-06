@@ -280,7 +280,7 @@ bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
     return canMove;
 }
 
-Piece* getEnPassantablePiece () const {
+Piece* BoardModel::getEnPassantablePiece () const {
     if (enPassantablePiece != nullptr && lastActionPiece != nullptr) {
         if (*enPassantablePiece == *lastActionPiece) {
             return enPassantablePiece;
@@ -289,6 +289,6 @@ Piece* getEnPassantablePiece () const {
     return nullptr;
 }
 
-void setEnPassantablePiece (Piece* piece) {
+void BoardModel::setEnPassantablePiece (Piece* piece) {
     enPassantablePiece = piece;
 }
