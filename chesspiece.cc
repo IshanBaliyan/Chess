@@ -25,10 +25,6 @@ int ChessPiece::getY() const {
     return 0;
 }
 
-BoardModel* ChessPiece::getBoard() const {
-    return nullptr;
-}
-
 std::string ChessPiece::getName() const {
     return "";
 }

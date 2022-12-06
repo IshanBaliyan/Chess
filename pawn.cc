@@ -167,10 +167,6 @@ int Pawn::getY() const {
     return y;
 }
 
-BoardModel *Pawn::getBoard() const {
-    return model;
-}
-
 string Pawn::getName() const {
     return name;
 }

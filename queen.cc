@@ -149,10 +149,6 @@ int Queen::getY() const {
     return y;
 }
 
-BoardModel *Queen::getBoard() const {
-    return model;
-}
-
 string Queen::getName() const {
     return name;
 }

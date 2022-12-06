@@ -21,7 +21,6 @@ class Knight : public Decorator {
         std::string getColour() const override;
         int getX() const override;
         int getY() const override;
-        BoardModel *getBoard() const override;
         std::string getName() const override;
 };
 

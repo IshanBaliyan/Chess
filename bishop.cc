@@ -122,10 +122,6 @@ int Bishop::getY() const {
     return y;
 }
 
-BoardModel *Bishop::getBoard() const {
-    return model;
-}
-
 string Bishop::getName() const {
     return name;
 }
