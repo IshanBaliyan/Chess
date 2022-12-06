@@ -11,32 +11,32 @@ class BoardController {
     BoardModel *model;
 
    private:
-    string whitePlayer;
-    string blackPlayer;
+    std::string whitePlayer;
+    std::string blackPlayer;
     bool changedStartColour;
     float whiteScore;
     float blackScore;
     Piece *pieces[8][8];
 
-    int parseX(string coords);  // converts column letter of position (ie "e" in e1) into numerical equivalent
-    int parseY(string coors);
-    string getLine();
-    string getColour(string inputName);    // gets the colour of the piece from the inputted piece name
-    string convertName(string inputName);  // converts inputted piece name to standard used in program
+    int parseX(std::string coords);  // converts column letter of position (ie "e" in e1) into numerical equivalent
+    int parseY(std::string coors);
+    std::string getLine();
+    std::string getColour(std::string inputName);    // gets the colour of the piece from the inputted piece name
+    std::string convertName(std::string inputName);  // converts inputted piece name to standard used in program
     void createDefaultBoard();
-    Piece *createPawn(string colour, int x, int y);
+    Piece *createPawn(std::string colour, int x, int y);
     bool checkForPawnPromotion(BoardModel *model);  // checks whole board if a pawn currently is in promotion square
     bool willPawnPromoteOnMove(Piece *piece);       // checks if piece is a pawn that will be promoted on move
     void updateScore();
     bool containsTwoKings();  // checks if board contains exactly two kings (one black and one white)
-    int getComputerLevel(string player);
+    int getComputerLevel(std::string player);
 
    public:
     BoardController();
-    void setWhitePlayer(string player);
-    void setBlackPlayer(string player);
-    string getWhitePlayer();
-    string getBlackPlayer();
+    void setWhitePlayer(std::string player);
+    void setBlackPlayer(std::string player);
+    std::string getWhitePlayer();
+    std::string getBlackPlayer();
     void initializeScores();  // sets score of black and white to 0
 
     void resetGame();

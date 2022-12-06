@@ -1,6 +1,6 @@
 #ifndef _PIECE_H_
-#define _PIECE_H
-#include "boardmodel.h"_
+#define _PIECE_H_
+#include "boardmodel.h"
 #include <string>
 
 class Piece {
