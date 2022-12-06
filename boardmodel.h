@@ -7,13 +7,11 @@
 #include <set>
 #include "subject.h"
 
-using namespace std;
-
 class Piece;
 
 class BoardModel : public Subject {
   Piece*** myBoard; // Really means Piece*[][], two-dimensional array
-  string turn;
+  std::string turn;
   set<Piece*> blackPieces;
   set<Piece*> whitePieces;
 
@@ -46,12 +44,12 @@ class BoardModel : public Subject {
   bool isPieceOnBoard(Piece* piece);
   void removePieceFromBoard(Piece* piece); // removes piece from board, but it still exists
   void undo();
-  void undo(string specialMove);
-  void changeTurn(string colour);
-  string getTurn() const;
+  void undo(std::string specialMove);
+  void changeTurn(std::string colour);
+  std::string getTurn() const;
   void nextTurn(); // Forward to next black/white player's turn
   void makeMove(int currentX, int currentY, int newX, int newY); // Throws error if the move is not possible
-  void makeMoveWithPawnPromotion(string replacePiece,int currentX, int currentY, int newX, int newY);
+  void makeMoveWithPawnPromotion(std::string replacePiece,int currentX, int currentY, int newX, int newY);
 };
 
 #endif
