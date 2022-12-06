@@ -95,8 +95,8 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
         throw InvalidMoveException{}; // TODO: add params?
     }
 
-    if (replacePiece != "R" && replacePiece != "Q" || 
-            replacePiece != "N" || replacePiece != "B") {
+    if (replacePiece != "R" && replacePiece != "Q" && 
+            replacePiece != "N" && replacePiece != "B") {
         throw InvalidMoveException{};
     }
 
