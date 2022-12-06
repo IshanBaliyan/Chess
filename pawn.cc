@@ -83,7 +83,6 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     }
 }
 
-// Only implement the following method for the PAWN (skip for other pieces)
 // Method for pawn (only implement for pawn), where pawn reaches end of
 // board and must be changed to one of Queen, Rook, Bishop, Knight
 void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &lastActionX, int &lastActionY, int newX, int newY) {
