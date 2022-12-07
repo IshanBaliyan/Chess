@@ -493,7 +493,6 @@ void BoardController::runGame() {
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
-            cout << "ischeck" << endl;
 
             model->nextTurn();  // change back to original turn
 
