@@ -27,7 +27,7 @@ class BoardModel : public Subject {
   int lastActionY = 0;
 
   // Variable to handle en passant
-  Piece* enPassantablePiece;
+  Piece* enPassantablePiece = nullptr;
 
   bool willMovingAnywhereCauseACheck();
 
