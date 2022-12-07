@@ -12,6 +12,7 @@ class BoardView : public Observer {
     Xwindow *win;
     void textDisplay();
     void graphicDisplay();
+    int pieceLetterToColour(std::string piece);
 
   public:
     BoardView(BoardModel *subject);
