@@ -107,7 +107,7 @@ bool BoardController::checkForPawnPromotion(BoardModel *model) {
         piece = model->getState(xPosition, yPosition);
         if (piece->getName() == "P") {
             if (piece->getColour() == "white") {
-                cout << "Cannot have whtie pawn at " << xPosition << ", " << yPosition << endl;
+                cout << "Cannot have white pawn at " << xPosition << ", " << yPosition << endl;
                 return true;
             }
         }
@@ -457,25 +457,21 @@ void BoardController::runGame() {
 
             Piece *piece = model->getState(x1, y1);
             if(piece == nullptr){
-                cout << "Invalid move. Please enter a valid move. " << endl;
+                cout << "You cannot move empty space. Please enter a valid move. " << endl;
                 continue;
             }
 
-            cout << x1 << " " << y1 << " | " << x2 << " " << y2 << endl;
-            
             // Promote pawn if its pawn promotion
             if (willPawnPromoteOnMove(piece)) {
                 ss1 >> replacePiece;
                 try{
                     model->makeMoveWithPawnPromotion(replacePiece, x1, y1, x2, y2);
                 }catch (InvalidMoveException &t) {
-                    cout << "Invalid move. Please enter a valid move. " << endl;
+                    cout << "Invalid move for pawn promotion. Please enter a valid move. " << endl;
                     continue;
                 }
                 model->nextTurn();  // change to next turn
             } else {
-                cout << "made it here"<< endl;
-
                 try{
                     // Make normal move or castle
                     model->makeMove(x1, y1, x2, y2);

@@ -60,8 +60,6 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
         throw InvalidMoveException{}; // TODO: add params?
     }
 
-    cout << "i am moving from " << x << " " << y << " to " << newX << " " << newY << endl;
-
     Piece *tmpLastCapturedPiece = lastCapturedPiece;
     Piece *tmpLastActionPiece = lastActionPiece;
     int tmpLastActionX = lastActionX;
@@ -78,9 +76,6 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     lastActionPiece = this;
     model->removePieceFromBoard(lastCapturedPiece);
 
-    cout << "After remove, at old location " << x << " " << y << " we have " << model->getState(x, y) << endl;
-    cout << "After remove, at the location " << newX << " " << newY << " we have " << model->getState(newX, newY)->getName() << endl;
-    
     if (model->isCheck()) {
         model->undo();
         lastActionPiece = tmpLastActionPiece;
@@ -156,12 +151,8 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
 
 bool Pawn::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
-        cout << "i am at " << x << " " << y << " and will try to move to " << newX << " " << newY << endl;
         model->makeMove(x, y, newX, newY);
-        cout << "Before we undo, we are at " << x << " " << y << endl;
-        cout << "Undoing what we did" << endl;
         model->undo();
-        cout << "i am now at " << x << " " << y << endl;
         return true;
     } catch (InvalidMoveException &t) {
         return false;

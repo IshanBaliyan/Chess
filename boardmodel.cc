@@ -58,7 +58,6 @@ void BoardModel::setState(int x, int y, Piece* piece) {
 }
 
 bool BoardModel::isCheck(){
-    cout << "Debug log: Inside is check function" << endl;
     // If black is in check
     if(turn == "black"){
         // Loop through all white's pieces and see if they can strike the king
@@ -246,9 +245,6 @@ void BoardModel::undo(string specialMove){
         int capturedX = lastActionPiece->getX();
         int capturedY = lastActionPiece->getY();
 
-        cout << "Last Captured Piece: X: " << capturedX << " Y: " << capturedY << endl;
-        cout << "Last Action Piece (should go back here): X: " << lastActionX << " Y: " << lastActionY << endl;
-
         myBoard[lastActionX][lastActionY] = lastActionPiece;
         myBoard[capturedX][capturedY] = lastCapturedPiece;
 
@@ -311,10 +307,6 @@ void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int
 }
 
 bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
-    cout << "Debug Log: CHECKMOVE " << currX << " " << currY << " | " << nextX << " " << nextY << endl;
-    
-    cout << "Debug Log: PIECE " << myBoard[currX][currY]->getName() << endl;
-    
     return myBoard[currX][currY]->canMove(nextX, nextY);
 }
 
