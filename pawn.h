@@ -21,6 +21,8 @@ class Pawn : public Decorator {
         std::string getColour() const override;
         int getX() const override;
         int getY() const override;
+        void setX(int newX) override;
+        void setY(int newY) override;
         std::string getName() const override;
 };
 

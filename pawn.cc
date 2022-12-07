@@ -7,6 +7,7 @@
 #include "bishop.h"
 #include "knight.h"
 #include <string>
+#include <iostream>
 using namespace std;
 
 Pawn::Pawn(BoardModel *model, string name, string colour, int x, int y, Piece *comp) : Decorator{comp}, model{model}, name{name}, colour{colour}, x{x}, y{y} {}
@@ -58,6 +59,9 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
     if (!canMove(newX, newY)) {
         throw InvalidMoveException{}; // TODO: add params?
     }
+
+    cout << "i am moving from " << x << " " << y << " to " << newX << " " << newY << endl;
+
     Piece *tmpLastCapturedPiece = lastCapturedPiece;
     Piece *tmpLastActionPiece = lastActionPiece;
     int tmpLastActionX = lastActionX;
@@ -148,8 +152,12 @@ void Pawn::makeMove(string replacePiece, Piece *&lastCapturedPiece, Piece *&last
 
 bool Pawn::willNextMoveStopCurrentCheck(int newX, int newY){
     try {
+        cout << "i am at " << x << " " << y << " and will try to move to " << newX << " " << newY << endl;
         model->makeMove(x, y, newX, newY);
+        cout << "Before we undo, we are at " << x << " " << y << endl;
+        cout << "Undoing what we did" << endl;
         model->undo();
+        cout << "i am now at " << x << " " << y << endl;
         return true;
     } catch (InvalidMoveException &t) {
         return false;
@@ -167,6 +175,14 @@ int Pawn::getX() const {
 
 int Pawn::getY() const {
     return y;
+}
+
+void Pawn::setX(int newX) {
+    x = newX;
+}
+
+void Pawn::setY(int newY) {
+    y = newY;
 }
 
 string Pawn::getName() const {

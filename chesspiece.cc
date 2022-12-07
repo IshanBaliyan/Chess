@@ -25,6 +25,14 @@ int ChessPiece::getY() const {
     return 0;
 }
 
+void ChessPiece::setX(int newX) {
+    return;
+}
+
+void ChessPiece::setY(int newY) {
+    return;
+}
+
 std::string ChessPiece::getName() const {
     return "";
 }

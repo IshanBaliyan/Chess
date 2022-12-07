@@ -87,6 +87,14 @@ int Knight::getY() const {
     return y;
 }
 
+void Knight::setX(int newX) {
+    x = newX;
+}
+
+void Knight::setY(int newY) {
+    y = newY;
+}
+
 string Knight::getName() const {
     return name;
 }

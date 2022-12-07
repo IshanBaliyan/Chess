@@ -122,6 +122,14 @@ int Bishop::getY() const {
     return y;
 }
 
+void Bishop::setX(int newX) {
+    x = newX;
+}
+
+void Bishop::setY(int newY) {
+    y = newY;
+}
+
 string Bishop::getName() const {
     return name;
 }

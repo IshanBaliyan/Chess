@@ -13,6 +13,8 @@ class Piece {
         virtual std::string getColour() const = 0;
         virtual int getX() const = 0;
         virtual int getY() const = 0;
+        virtual void setX(int newX) = 0;
+        virtual void setY(int newY) = 0;
         virtual std::string getName() const = 0;
         virtual bool getCanCastle() const;
 };

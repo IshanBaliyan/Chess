@@ -107,6 +107,14 @@ int Rook::getY() const {
     return y;
 }
 
+void Rook::setX(int newX) {
+    x = newX;
+}
+
+void Rook::setY(int newY) {
+    y = newY;
+}
+
 string Rook::getName() const {
     return name;
 }

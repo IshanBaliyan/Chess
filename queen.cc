@@ -149,6 +149,14 @@ int Queen::getY() const {
     return y;
 }
 
+void Queen::setX(int newX) {
+    x = newX;
+}
+
+void Queen::setY(int newY) {
+    y = newY;
+}
+
 string Queen::getName() const {
     return name;
 }

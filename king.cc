@@ -159,6 +159,14 @@ int King::getY() const {
     return y;
 }
 
+void King::setX(int newX) {
+    x = newX;
+}
+
+void King::setY(int newY) {
+    y = newY;
+}
+
 string King::getName() const {
     return name;
 }

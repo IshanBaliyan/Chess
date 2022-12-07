@@ -58,20 +58,41 @@ void BoardModel::setState(int x, int y, Piece* piece) {
 }
 
 bool BoardModel::isCheck(){
+
+    cout << "inside ischeck func" << endl;
     // If black is in check
     if(turn == "black"){
+        cout << "inside BLACK ischeck func" << endl;
         // Loop through all white's pieces and see if they can strike the king
-        for(Piece* whitePiece : whitePieces){
-            if(checkMove(whitePiece->getX(), whitePiece->getY(), blackKing->getX(), blackKing->getY()) == true){
+        for(auto whitePiece = whitePieces.begin(); whitePiece != whitePieces.end(); whitePiece++){
+            int w = (*whitePiece)->getX();
+            int r = (*whitePiece)->getY();
+            int t = blackKing->getX();
+            int u = blackKing->getY();
+
+            cout << "NAME: " << (*whitePiece)->getName() << " at " << w << "," << r << endl;
+
+            if(checkMove((*whitePiece)->getX(), (*whitePiece)->getY(), blackKing->getX(), blackKing->getY()) == true){
                 return true;
             }
         }
+        cout << "STILL BLACK INSIDE" << endl;
     }
     // If white is in check
     else{
+        cout << "inside WHITE ischeck func" << endl;
         // Loop through all black's pieces and see if they can strike the king
-        for(Piece* blackPiece : blackPieces){
-            if(checkMove(blackPiece->getX(), blackPiece->getY(), whiteKing->getX(), whiteKing->getY())){
+        for(auto blackPiece = blackPieces.begin(); blackPiece != blackPieces.end(); blackPiece++){
+            int w = (*blackPiece)->getX();
+            int r = (*blackPiece)->getY();
+            int t = whiteKing->getX();
+            int u = whiteKing->getY();
+
+            //cout << w << "NNUM " << r << " " << t << " " << u << " " << endl;
+
+            cout << "NAME: " << (*blackPiece)->getName() << " at " << w << "," << r << endl;
+
+            if(checkMove((*blackPiece)->getX(), (*blackPiece)->getY(), whiteKing->getX(), whiteKing->getY())){
                 return true;
             }
         }
@@ -83,10 +104,10 @@ bool BoardModel::isCheck(){
 bool BoardModel::willMovingAnywhereCauseACheck(){
     if(turn == "black"){
         // Loop through all black pieces and see if there is any move that will not cause white to check
-        for(Piece* blackPiece : blackPieces){
+        for(auto blackPiece = blackPieces.begin(); blackPiece != blackPieces.end(); blackPiece++){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
-                    if(blackPiece->willNextMoveStopCurrentCheck(i, j)){
+                    if((*blackPiece)->willNextMoveStopCurrentCheck(i, j)){
                         return false;
                     }
                 }
@@ -95,10 +116,10 @@ bool BoardModel::willMovingAnywhereCauseACheck(){
     }
     else{
         // Loop through all white pieces and see if there is any move that will not cause black to check
-        for(Piece* whitePiece : whitePieces){
+        for(auto whitePiece = whitePieces.begin(); whitePiece != whitePieces.end(); whitePiece++){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
-                    if(whitePiece->willNextMoveStopCurrentCheck(i, j)){
+                    if((*whitePiece)->willNextMoveStopCurrentCheck(i, j)){
                         return false;
                     }
                 }
@@ -136,7 +157,7 @@ void BoardModel::addPiece(Piece* piece, int x, int y){
     if(piece->getColour() == "black"){
         blackPieces.insert(piece);
     }
-    else{
+    else if(piece->getColour() == "white"){
         whitePieces.insert(piece);
     }
 
@@ -230,12 +251,19 @@ void BoardModel::undo(){
 
 void BoardModel::undo(string specialMove){
     if(specialMove == "no special move"){
+
         // Old position of lastActionPiece will be empty, so just move back
         int capturedX = lastActionPiece->getX();
         int capturedY = lastActionPiece->getY();
 
+        cout << "Last Captured Piece: X: " << capturedX << " Y: " << capturedY << endl;
+        cout << "Last Action Piece (should go back here): X: " << lastActionX << " Y: " << lastActionY << endl;
+
         myBoard[lastActionX][lastActionY] = lastActionPiece;
         myBoard[capturedX][capturedY] = lastCapturedPiece;
+
+        lastActionPiece->setX(lastActionX);
+        lastActionPiece->setY(lastActionY);
     }
     else if(specialMove == "castle"){
         // TODO: Add implementation to undo. NOT MVP
@@ -267,10 +295,6 @@ void BoardModel::nextTurn() {
 
 void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
     try{
-        if(myBoard[currentX][currentY] == nullptr){
-            return;
-        }
-        cout << currentX << " " << currentY << " | " << newX << " " << newY << endl;
         myBoard[currentX][currentY]->makeMove(lastCapturedPiece, lastActionPiece, lastActionX, lastActionY,
         newX, newY);
     } catch (InvalidMoveException& t){
@@ -289,7 +313,11 @@ void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int
 }
 
 bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
-    return myBoard[currX][currY].canMove(nextX, nextY);
+    cout << "CHECKMOVE " << currX << " " << currY << " | " << nextX << " " << nextY << endl;
+    
+    cout << "PIECE " << myBoard[currX][currY]->getName() << endl;
+    
+    return myBoard[currX][currY]->canMove(nextX, nextY);
 }
 
 Piece* BoardModel::getEnPassantablePiece () const {

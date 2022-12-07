@@ -18,6 +18,7 @@
 #include "queen.h"
 #include "rook.h"
 #include "user.h"
+#include "invalidmoveexception.h"
 
 using namespace std;
 
@@ -432,6 +433,7 @@ void BoardController::runGame() {
     string command;
     string currCoord;  // current coordinate of piece
     string nextCoord;  // coordinate to move piece to
+
     int x1;
     int y1;
     int x2;
@@ -465,27 +467,48 @@ void BoardController::runGame() {
             y2 = parseY(nextCoord);
 
             Piece *piece = model->getState(x1, y1);
-
+            cout << x1 << " " << y1 << " | " << x2 << " " << y2 << endl;
+            
             // Promote pawn if its pawn promotion
             if (willPawnPromoteOnMove(piece)) {
                 ss1 >> replacePiece;
-                model->makeMoveWithPawnPromotion(replacePiece, x1, y1, x2, y2);
-                model->changeTurn(model->getTurn());  // change to next turn
+                try{
+                    model->makeMoveWithPawnPromotion(replacePiece, x1, y1, x2, y2);
+                }catch (InvalidMoveException &t) {
+                    cout << "Invalid move. Please enter a valid move. " << endl;
+                    continue;
+                }
+                model->nextTurn();  // change to next turn
             } else {
-                // Make normal move or castle
-                model->makeMove(x1, y1, x2, y2);
-                model->changeTurn(model->getTurn());  // change to next turn
+                cout << "made it here"<< endl;
+
+                try{
+                    // Make normal move or castle
+                    model->makeMove(x1, y1, x2, y2);
+                }catch (InvalidMoveException &t) {
+                    cout << "Invalid move. Please enter a valid move. " << endl;
+                    continue;
+                }
+
+                cout << "hello"<< endl;
+                model->nextTurn();  // change to next turn
+
+                cout << "hi"<< endl;
             }
 
             if (model->isCheck()) {  // if move made mover in check
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
+            cout << "check"<< endl;
+
             model->nextTurn();
             if (model->isCheck()) {  // if move made opponent in check
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
+            cout << "ischeck"<< endl;
+
             model->nextTurn();  // change back to original turn
 
             if (model->isCheckmate()) {
