@@ -426,7 +426,7 @@ void BoardController::runGame() {
     string piece;
     string replacePiece;
 
-    if (usedSetup = false) {
+    if (usedSetup == false) {
         // creates a BoardModel called model
         createDefaultBoard();
 
