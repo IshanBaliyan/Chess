@@ -92,10 +92,11 @@ bool BoardController::checkForPawnPromotion(BoardModel *model) {
 
     while (xPosition < 8) {  // check for any black pawns on first row (x, 0)
         piece = model->getState(xPosition, yPosition);
-
-        if (piece->getName() == "P") {
-            if (piece->getColour() == "black") {
-                return true;
+        if(piece != nullptr){
+            if (piece->getName() == "P") {
+                if (piece->getColour() == "black") {
+                    return true;
+                }
             }
         }
         xPosition++;
