@@ -182,7 +182,7 @@ void BoardView::graphicDisplay(){
                     string lower = string(1, lowercase);
                     // Recall old text version: cout << lowercase;;
                     // win->drawString(j * 10, i * 10, lower);
-                    win->fillRectangle(10 + j * 100, 10 + 700 - i * 100, 100, 100, 0);
+                    win->fillRectangle(j * 100, 700 - i * 100, 100, 100, 0);
                     win->fillRectangle(10 + j * 100, 10 + 700 - i * 100, 80, 80, pieceLetterToColour(lower));
                 }
                 else{
