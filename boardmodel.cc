@@ -62,11 +62,6 @@ bool BoardModel::isCheck(){
     if(turn == "black"){
         // Loop through all white's pieces and see if they can strike the king
         for(auto whitePiece = whitePieces.begin(); whitePiece != whitePieces.end(); whitePiece++){
-            int w = (*whitePiece)->getX();
-            int r = (*whitePiece)->getY();
-            int t = blackKing->getX();
-            int u = blackKing->getY();
-
             if(checkMove((*whitePiece)->getX(), (*whitePiece)->getY(), blackKing->getX(), blackKing->getY()) == true){
                 return true;
             }
@@ -76,11 +71,6 @@ bool BoardModel::isCheck(){
     else{
         // Loop through all black's pieces and see if they can strike the king
         for(auto blackPiece = blackPieces.begin(); blackPiece != blackPieces.end(); blackPiece++){
-            int w = (*blackPiece)->getX();
-            int r = (*blackPiece)->getY();
-            int t = whiteKing->getX();
-            int u = whiteKing->getY();
-
             if(checkMove((*blackPiece)->getX(), (*blackPiece)->getY(), whiteKing->getX(), whiteKing->getY())){
                 return true;
             }
@@ -222,6 +212,19 @@ void BoardModel::removePieceFromBoard(Piece* piece){
 }
 
 void BoardModel::deletePiece(Piece* piece){
+    if(piece == nullptr){
+        return;
+    }
+
+    removePieceFromBoard(piece);
+
+    //myBoard[piece->getX()][piece->getY()] = nullptr;
+
+    // Deletes the piece for you
+    delete piece;
+}
+
+void BoardModel::deletePieceAndClearFromBoard(Piece* piece){
     if(piece == nullptr){
         return;
     }

@@ -396,7 +396,7 @@ void BoardController::setupGame() {
                 x = parseX(coord);
                 y = parseY(coord);
 
-                model->deletePiece(model->getState(x, y));
+                model->deletePieceAndClearFromBoard(model->getState(x, y));
 
             } else if (command == "=") {
                 ss1 >> colour;
@@ -494,7 +494,6 @@ void BoardController::runGame() {
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
-            cout << "ischeck"<< endl;
 
             model->nextTurn();  // change back to original turn
 
