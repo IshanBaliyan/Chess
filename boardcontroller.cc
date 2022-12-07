@@ -500,7 +500,9 @@ void BoardController::runGame() {
             model->nextTurn();  // change back to original turn
 
             if (model->isCheckmate()) {
+                model->nextTurn();
                 cout << "Checkmate! " << model->getTurn() << " wins!" << endl;
+                model->nextTurn();
                 updateScore();
                 break;
             }
@@ -528,5 +530,7 @@ void BoardController::runGame() {
 }
 
 void BoardController::outputWins() {
-    // TODO: INSERT CODE
+    cout << "Final Score:" << endl;
+    cout << "White: " << whiteScore << endl;
+    cout << "Black: " << blackScore << endl;
 }

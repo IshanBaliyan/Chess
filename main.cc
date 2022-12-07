@@ -20,7 +20,6 @@ int main() {
         boardController->initializeScores();
 
         if (cin.eof()) {
-            boardController->outputWins();
             break;
         }
 
@@ -41,6 +40,8 @@ int main() {
 
             boardController->setupGame();
         }
+
+        boardController->outputWins();
     }
 
      
