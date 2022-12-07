@@ -409,6 +409,7 @@ void BoardController::setupGame() {
         }
         model->display();
     }
+    delete view;
 }
 
 void BoardController::runGame() {
@@ -425,11 +426,13 @@ void BoardController::runGame() {
     string piece;
     string replacePiece;
 
-    // creates a BoardModel called model
-    createDefaultBoard();
+    if (usedSetup = false) {
+        // creates a BoardModel called model
+        createDefaultBoard();
 
-    // default current turn to white
-    model->changeTurn("white");
+        // default current turn to white
+        model->changeTurn("white");
+    }
 
     // Create a BoardView that connects with the BoardModel
     BoardView *view = new BoardView{model};
