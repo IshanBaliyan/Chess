@@ -218,6 +218,19 @@ void BoardModel::deletePiece(Piece* piece){
 
     removePieceFromBoard(piece);
 
+    //myBoard[piece->getX()][piece->getY()] = nullptr;
+
+    // Deletes the piece for you
+    delete piece;
+}
+
+void BoardModel::deletePieceAndClearFromBoard(Piece* piece){
+    if(piece == nullptr){
+        return;
+    }
+
+    removePieceFromBoard(piece);
+
     myBoard[piece->getX()][piece->getY()] = nullptr;
 
     // Deletes the piece for you
