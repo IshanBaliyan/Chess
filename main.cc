@@ -35,9 +35,7 @@ int main() {
             boardController->setWhitePlayer(whitePlayer);
             boardController->setBlackPlayer(blackPlayer);
 
-            boardController->runGame();
-            boardController->resetGame();
-
+            boardController->runGame(); // deletes board after game is over
         } else if (command == "setup") {
             cout << "entered setup" << endl;  // remove later
 

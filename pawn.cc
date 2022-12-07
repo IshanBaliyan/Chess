@@ -89,18 +89,11 @@ void Pawn::makeMove(Piece *&lastCapturedPiece, Piece *&lastActionPiece, int &las
         lastActionY = tmpLastActionY;
         throw InvalidMoveException{};
     } else {
-        cout << "Before delete, at old location " << x << " " << y << " we have " << model->getState(x, y) << endl;
-        cout << "Before delete, at the location " << newX << " " << newY << " we have " << model->getState(newX, newY)->getName() << endl;
         model->deletePiece(tmpLastCapturedPiece);
-        cout << "After delete, at old location " << x << " " << y << " we have " << model->getState(x, y) << endl;
-        cout << "After delete, at the location " << newX << " " << newY << " we have " << model->getState(newX, newY)->getName() << endl;
         if (lastActionX + 2 == x || lastActionX == x + 2) {
             model->setEnPassantablePiece(this);
         }
     }
-
-    cout << "At old location " << x << " " << y << " we have " << model->getState(x, y) << endl;
-    cout << "At the location " << newX << " " << newY << " we have " << model->getState(newX, newY)->getName() << endl;
 }
 
 // Method for pawn (only implement for pawn), where pawn reaches end of

@@ -117,6 +117,9 @@ bool BoardController::checkForPawnPromotion(BoardModel *model) {
 }
 
 bool BoardController::willPawnPromoteOnMove(Piece *piece) {
+    if(piece == nullptr){
+        return false;
+    }
     if (piece->getName() == "P") {
         if (piece->getY() == 6) {
             if (piece->getColour() == "white") {
@@ -255,24 +258,6 @@ void BoardController::createDefaultBoard() {
     Piece *queenB = new Queen{model, "Q", "black", 3, 7, new ChessPiece};
     Piece *kingB = new King{model, "K", "black", 4, 7, new ChessPiece};
 
-    // pieces[0][1] = pawnW1;
-    // pieces[1][1] = pawnW2;
-    // pieces[2][1] = pawnW3;
-    // pieces[3][1] = pawnW4;
-    // pieces[4][1] = pawnW5;
-    // pieces[5][1] = pawnW6;
-    // pieces[6][1] = pawnW7;
-    // pieces[7][1] = pawnW8;
-
-    // pieces[0][0] = 
-    // pieces[1][0] = 
-    // pieces[2][0] = 
-    // pieces[3][0] = 
-    // pieces[4][0] = 
-    // pieces[5][0] = 
-    // pieces[6][0] = 
-    // pieces[7][0] = 
-
     // add pieces to board
     model->addPiece(pawnW1, 0, 1);
     model->addPiece(pawnW2, 1, 1);
@@ -311,16 +296,6 @@ void BoardController::createDefaultBoard() {
     model->addPiece(rookB2, 7, 7);
 }
 
-void BoardController::resetGame() {
-    // TODO: INSERT CODE
-    // add new board
-    changedStartColour = false;
-    model->~BoardModel();
-    createDefaultBoard();
-    // default current turn to white
-    model->changeTurn("white");
-}
-
 void BoardController::setupGame() {
     // TODO: INSERT CODE
     string currLine;
@@ -336,7 +311,12 @@ void BoardController::setupGame() {
     // default current turn to white
     model->changeTurn("white");
 
-    while (true) {
+    // Create a BoardView that connects with the BoardModel
+    BoardView* view = new BoardView{model};
+
+    model->display();
+
+    while (false) {
         currLine = getLine();
         if (currLine == "done") {
             bool canExit = true;
@@ -422,8 +402,6 @@ void BoardController::setupGame() {
                 } else {
                     model->changeTurn("white");
                 }
-
-                changedStartColour = true;
             }
         }
     }
@@ -453,7 +431,12 @@ void BoardController::runGame() {
     BoardView* view = new BoardView{model};
     
     while (isRunning) {
-        currLine = getLine();
+        string currLine;
+        getline(cin, currLine);
+
+        if(cin.eof()){
+            break;
+        }
 
         istringstream ss1{currLine};
         ss1 >> command;
@@ -469,6 +452,11 @@ void BoardController::runGame() {
             y2 = parseY(nextCoord);
 
             Piece *piece = model->getState(x1, y1);
+            if(piece == nullptr){
+                cout << "Invalid move. Please enter a valid move. " << endl;
+                continue;
+            }
+
             cout << x1 << " " << y1 << " | " << x2 << " " << y2 << endl;
             
             // Promote pawn if its pawn promotion
@@ -492,17 +480,13 @@ void BoardController::runGame() {
                     continue;
                 }
 
-                cout << "hello"<< endl;
                 model->nextTurn();  // change to next turn
-
-                cout << "hi"<< endl;
             }
 
             if (model->isCheck()) {  // if move made mover in check
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
-            cout << "check"<< endl;
 
             model->nextTurn();
             if (model->isCheck()) {  // if move made opponent in check

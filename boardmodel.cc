@@ -58,11 +58,9 @@ void BoardModel::setState(int x, int y, Piece* piece) {
 }
 
 bool BoardModel::isCheck(){
-
-    cout << "inside ischeck func" << endl;
+    cout << "Debug log: Inside is check function" << endl;
     // If black is in check
     if(turn == "black"){
-        cout << "inside BLACK ischeck func" << endl;
         // Loop through all white's pieces and see if they can strike the king
         for(auto whitePiece = whitePieces.begin(); whitePiece != whitePieces.end(); whitePiece++){
             int w = (*whitePiece)->getX();
@@ -70,27 +68,19 @@ bool BoardModel::isCheck(){
             int t = blackKing->getX();
             int u = blackKing->getY();
 
-            cout << "NAME: " << (*whitePiece)->getName() << " at " << w << "," << r << endl;
-
             if(checkMove((*whitePiece)->getX(), (*whitePiece)->getY(), blackKing->getX(), blackKing->getY()) == true){
                 return true;
             }
         }
-        cout << "STILL BLACK INSIDE" << endl;
     }
     // If white is in check
     else{
-        cout << "inside WHITE ischeck func" << endl;
         // Loop through all black's pieces and see if they can strike the king
         for(auto blackPiece = blackPieces.begin(); blackPiece != blackPieces.end(); blackPiece++){
             int w = (*blackPiece)->getX();
             int r = (*blackPiece)->getY();
             int t = whiteKing->getX();
             int u = whiteKing->getY();
-
-            //cout << w << "NNUM " << r << " " << t << " " << u << " " << endl;
-
-            cout << "NAME: " << (*blackPiece)->getName() << " at " << w << "," << r << endl;
 
             if(checkMove((*blackPiece)->getX(), (*blackPiece)->getY(), whiteKing->getX(), whiteKing->getY())){
                 return true;
@@ -319,9 +309,9 @@ void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int
 }
 
 bool BoardModel::checkMove(int currX, int currY, int nextX, int nextY) {
-    cout << "CHECKMOVE " << currX << " " << currY << " | " << nextX << " " << nextY << endl;
+    cout << "Debug Log: CHECKMOVE " << currX << " " << currY << " | " << nextX << " " << nextY << endl;
     
-    cout << "PIECE " << myBoard[currX][currY]->getName() << endl;
+    cout << "Debug Log: PIECE " << myBoard[currX][currY]->getName() << endl;
     
     return myBoard[currX][currY]->canMove(nextX, nextY);
 }
