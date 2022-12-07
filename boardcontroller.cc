@@ -152,6 +152,9 @@ bool BoardController::containsTwoKings() {
     for (int i = 0; i <= 7; i++) {  // loop over row
         for (int j = 0; j <= 7; j++) {
             piece = model->getState(i, j);
+            if(piece == nullptr){
+                continue;
+            }
             if (piece->getName() == "K") {
                 if (piece->getColour() == "white") {
                     numKingW++;
@@ -316,7 +319,7 @@ void BoardController::setupGame() {
 
     model->display();
 
-    while (false) {
+    while (true) {
         currLine = getLine();
         if (currLine == "done") {
             bool canExit = true;
@@ -404,6 +407,7 @@ void BoardController::setupGame() {
                 }
             }
         }
+        model->display();
     }
 }
 

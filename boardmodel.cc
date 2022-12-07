@@ -229,6 +229,8 @@ void BoardModel::deletePiece(Piece* piece){
 
     removePieceFromBoard(piece);
 
+    myBoard[piece->getX()][piece->getY()] = nullptr;
+
     // Deletes the piece for you
     delete piece;
 }
