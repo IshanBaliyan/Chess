@@ -11,6 +11,7 @@
 #include "chesspiece.h"
 #include "computer.h"
 #include "human.h"
+#include "invalidmoveexception.h"
 #include "king.h"
 #include "knight.h"
 #include "pawn.h"
@@ -18,7 +19,6 @@
 #include "queen.h"
 #include "rook.h"
 #include "user.h"
-#include "invalidmoveexception.h"
 
 using namespace std;
 
@@ -92,7 +92,7 @@ bool BoardController::checkForPawnPromotion(BoardModel *model) {
 
     while (xPosition < 8) {  // check for any black pawns on first row (x, 0)
         piece = model->getState(xPosition, yPosition);
-        if(piece != nullptr){
+        if (piece != nullptr) {
             if (piece->getName() == "P") {
                 if (piece->getColour() == "black") {
                     return true;
@@ -118,7 +118,7 @@ bool BoardController::checkForPawnPromotion(BoardModel *model) {
 }
 
 bool BoardController::willPawnPromoteOnMove(Piece *piece) {
-    if(piece == nullptr){
+    if (piece == nullptr) {
         return false;
     }
     if (piece->getName() == "P") {
@@ -153,7 +153,7 @@ bool BoardController::containsTwoKings() {
     for (int i = 0; i <= 7; i++) {  // loop over row
         for (int j = 0; j <= 7; j++) {
             piece = model->getState(i, j);
-            if(piece == nullptr){
+            if (piece == nullptr) {
                 continue;
             }
             if (piece->getName() == "K") {
@@ -195,7 +195,6 @@ int BoardController::getComputerLevel(string player) {
     char level = player[9];
     int levelNum = level - '0';
     return levelNum;
-
 }
 
 Piece *BoardController::createPawn(string colour, int x, int y) {
@@ -209,9 +208,8 @@ void BoardController::initializeScores() {
 }
 
 void BoardController::createDefaultBoard() {
-
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
             pieces[i][j] = nullptr;
         }
     }
@@ -316,7 +314,7 @@ void BoardController::setupGame() {
     model->changeTurn("white");
 
     // Create a BoardView that connects with the BoardModel
-    BoardView* view = new BoardView{model};
+    BoardView *view = new BoardView{model};
 
     model->display();
 
@@ -350,6 +348,7 @@ void BoardController::setupGame() {
 
             // If conditions are met to finish setup, break out of setup, if not stay in setup mode
             if (canExit) {
+                usedSetup = true;
                 break;
             } else {
                 continue;
@@ -428,18 +427,18 @@ void BoardController::runGame() {
 
     // creates a BoardModel called model
     createDefaultBoard();
-    
+
     // default current turn to white
     model->changeTurn("white");
 
     // Create a BoardView that connects with the BoardModel
-    BoardView* view = new BoardView{model};
-    
+    BoardView *view = new BoardView{model};
+
     while (isRunning) {
         string currLine;
         getline(cin, currLine);
 
-        if(cin.eof()){
+        if (cin.eof()) {
             break;
         }
 
@@ -457,7 +456,7 @@ void BoardController::runGame() {
             y2 = parseY(nextCoord);
 
             Piece *piece = model->getState(x1, y1);
-            if(piece == nullptr){
+            if (piece == nullptr) {
                 cout << "You cannot move empty space. Please enter a valid move. " << endl;
                 continue;
             }
@@ -465,18 +464,18 @@ void BoardController::runGame() {
             // Promote pawn if its pawn promotion
             if (willPawnPromoteOnMove(piece)) {
                 ss1 >> replacePiece;
-                try{
+                try {
                     model->makeMoveWithPawnPromotion(replacePiece, x1, y1, x2, y2);
-                }catch (InvalidMoveException &t) {
+                } catch (InvalidMoveException &t) {
                     cout << "Invalid move for pawn promotion. Please enter a valid move. " << endl;
                     continue;
                 }
                 model->nextTurn();  // change to next turn
             } else {
-                try{
+                try {
                     // Make normal move or castle
                     model->makeMove(x1, y1, x2, y2);
-                }catch (InvalidMoveException &t) {
+                } catch (InvalidMoveException &t) {
                     cout << "Invalid move. Please enter a valid move. " << endl;
                     continue;
                 }
@@ -494,7 +493,7 @@ void BoardController::runGame() {
                 cout << model->getTurn() << " "
                      << "is in check." << endl;
             }
-            cout << "ischeck"<< endl;
+            cout << "ischeck" << endl;
 
             model->nextTurn();  // change back to original turn
 

@@ -17,6 +17,7 @@ class BoardController {
     float whiteScore;
     float blackScore;
     Piece *pieces[8][8];
+    bool usedSetup = false;
 
     int parseX(std::string coords);  // converts column letter of position (ie "e" in e1) into numerical equivalent
     int parseY(std::string coors);
