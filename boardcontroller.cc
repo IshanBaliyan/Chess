@@ -317,6 +317,8 @@ void BoardController::resetGame() {
     changedStartColour = false;
     model->~BoardModel();
     createDefaultBoard();
+    // default current turn to white
+    model->changeTurn("white");
 }
 
 void BoardController::setupGame() {
@@ -514,20 +516,20 @@ void BoardController::runGame() {
             if (model->isCheckmate()) {
                 cout << "Checkmate! " << model->getTurn() << " wins!" << endl;
                 updateScore();
-                isRunning = false;
+                break;
             }
 
             if (model->isStalemate()) {
                 cout << "Stalemate!" << endl;
                 whiteScore += 0.5;
                 blackScore += 0.5;
-                isRunning = false;
+                break;
             }
 
         } else if (command == "resign") {
             updateScore();
             cout << model->getTurn() << " resigns" << endl;
-            isRunning = false;
+            break;
         }
 
         // Display the BoardView(s) that are connected to the BoardModel

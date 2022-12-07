@@ -148,6 +148,10 @@ bool BoardModel::isStalemate(){
 
 
 void BoardModel::addPiece(Piece* piece, int x, int y){
+    if(piece == nullptr){
+        return;
+    }
+
     // If myBoard[x][y] is not a nullptr, delete the piece currently there
     if(myBoard[x][y]){
         deletePiece(myBoard[x][y]);
@@ -177,23 +181,17 @@ void BoardModel::addPiece(Piece* piece, int x, int y){
 bool BoardModel::isPieceOnBoard(Piece* piece){
     if(piece->getColour() == "black"){
         // Remove the piece from the black set
-        for (auto i = blackPieces.begin(); i != blackPieces.end(); ) {
-            if (*i == piece){
+        for (auto i = blackPieces.begin(); i != blackPieces.end(); i++) {
+            if (pieceEqualsOtherPiece(*i, piece)){
                 return true;
-            }
-            else{
-                i++;
             }
         }
     } 
     else{
         // Remove the piece from the white set
-        for (auto i = whitePieces.begin(); i != whitePieces.end(); ) {
-            if (*i == piece){
+        for (auto i = whitePieces.begin(); i != whitePieces.end(); i++) {
+            if (pieceEqualsOtherPiece(*i, piece)){
                 return true;
-            }
-            else{
-                i++;
             }
         }
     }
@@ -207,29 +205,29 @@ void BoardModel::removePieceFromBoard(Piece* piece){
     // Remove the piece from the set of black or white pieces
     if(piece->getColour() == "black"){
         // Remove the piece from the black set
-        for (auto i = blackPieces.begin(); i != blackPieces.end(); ) {
-            if (*i == piece){
-                blackPieces.erase(i);
+        for (auto i = blackPieces.begin(); i != blackPieces.end();) {
+            if (pieceEqualsOtherPiece(*i, piece)){
+                i = blackPieces.erase(i);
             }
             else{
-                i++;
+                ++i;
             }
         }
     } 
     else{
         // Remove the piece from the white set
-        for (auto i = whitePieces.begin(); i != whitePieces.end(); ) {
-            if (*i == piece){
-                whitePieces.erase(i);
+        for (auto i = whitePieces.begin(); i != whitePieces.end();) {
+            if (pieceEqualsOtherPiece(*i, piece)){
+                i = whitePieces.erase(i);
             }
             else{
-                i++;
+                ++i;
             }
         }
     }
 
     // Set the x,y space on the board to be empty (nullptr means no piece on that square)
-    myBoard[piece->getX()][piece->getY()] = nullptr;
+    //myBoard[piece->getX()][piece->getY()] = nullptr;
 
     // Note, the piece still exists, so make sure to delete it later
 }
@@ -264,6 +262,8 @@ void BoardModel::undo(string specialMove){
 
         lastActionPiece->setX(lastActionX);
         lastActionPiece->setY(lastActionY);
+
+        addPiece(lastCapturedPiece, capturedX, capturedY);
     }
     else if(specialMove == "castle"){
         // TODO: Add implementation to undo. NOT MVP
@@ -295,6 +295,9 @@ void BoardModel::nextTurn() {
 
 void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
     try{
+        if(myBoard[currentX][currentY]->getColour() != turn){
+            throw InvalidMoveException{};
+        }
         myBoard[currentX][currentY]->makeMove(lastCapturedPiece, lastActionPiece, lastActionX, lastActionY,
         newX, newY);
     } catch (InvalidMoveException& t){
@@ -305,6 +308,9 @@ void BoardModel::makeMove(int currentX, int currentY, int newX, int newY){
 
 void BoardModel::makeMoveWithPawnPromotion(string replacePiece,int currentX, int currentY, int newX, int newY){
     try{
+        if(myBoard[currentX][currentY]->getColour() != turn){
+            throw InvalidMoveException{};
+        }
         myBoard[currentX][currentY]->makeMove(replacePiece, lastCapturedPiece, lastActionPiece, lastActionX, 
         lastActionY, newX, newY);
     } catch (InvalidMoveException& t){
